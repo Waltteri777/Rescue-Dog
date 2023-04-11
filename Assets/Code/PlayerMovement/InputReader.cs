@@ -15,6 +15,7 @@ public class InputReader : MonoBehaviour
     //stores move input of movement controls
     private Vector3 moveInput;
     private float clickInput;
+    private Vector2 mousePos;
     private float worldClickPosition;
     private float interactionInput;
     private PlayerInput playerInput;
@@ -44,6 +45,12 @@ public class InputReader : MonoBehaviour
         clickInput = context.ReadValue<float>();
     }
 
+    public void MousePosition(InputAction.CallbackContext context)
+    {
+        currentControlMethod = ControlMethod.KBM;
+        mousePos = context.ReadValue<Vector2>();
+    }
+
     public Vector3 GetMoveInput()
     {
         return this.moveInput;
@@ -57,5 +64,10 @@ public class InputReader : MonoBehaviour
     public float GetInteractionInput()
     {
         return interactionInput;
+    }
+
+    public Vector2 GetMousePos() 
+    {
+        return mousePos;
     }
 }

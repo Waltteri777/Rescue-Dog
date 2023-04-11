@@ -34,6 +34,7 @@ public class Mover : MonoBehaviour
     }
 
     //Player movement settings
+    //direction is 0 or 1 so it doesnt matter if its multiplied or not
     private void Move(Vector3 direction)
     {
         rb.velocity = direction * playerSpeed;
