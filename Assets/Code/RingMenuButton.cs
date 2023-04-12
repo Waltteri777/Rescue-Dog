@@ -4,9 +4,10 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
-[CreateAssetMenu(fileName = "RingMenuButton", menuName = "RingMenu/RingButtons", order = 0)]
-public class RingMenuButton : ScriptableObject
+public class RingMenuButton : MonoBehaviour
 {
     public TMP_Text buttonName;
-    public Button button;
+    public Image button;
+
+
 }

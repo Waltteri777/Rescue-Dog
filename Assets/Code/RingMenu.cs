@@ -4,14 +4,10 @@ using UnityEngine;
 
 public class RingMenu : MonoBehaviour
 {
-    public GameObject[] buttonList;
-    public MenuSection[] menuSection;
-    [SerializeField] private float UIAngle = 360.0f;
-    [SerializeField] private float sectionSize;
     private Vector2 mousePosition;
     private InputReader inputReader;
-
-
+    public RingMenuButton buttonPrefab;
+    public RingMenuButton selected;
 
     private void Awake()
     {
@@ -20,29 +16,18 @@ public class RingMenu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        for(int i = 0; i < buttonList.Length; i++)
-        {
+        RingMenuButton newButton = Instantiate(buttonPrefab) as RingMenuButton;
+        newButton.transform.SetParent(transform, false);
+        newButton.transform.localPosition = new Vector3(0f, 100f, 0f);
+    }
 
+    private void SpawnButtons (UIInteractable button)
+    {
+        for (int i = 0; i < button.options.Length;  i++)
+        {
+            RingMenuButton newButton = Instantiate(buttonPrefab) as RingMenuButton;
+            newButton.transform.SetParent(transform, false);
+            newButton.transform.localPosition = new Vector3(0f, 100f, 0f);
         }
     }
-
-    private void FixedUpdate()
-    {
-        mousePosition = inputReader.GetMousePos();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        //normalizedMousePosition = new Vector2(inputReader.GetMousePos().x - Screen.width/2, inputReader.GetMousePos().y - Screen.height/2);
-        sectionSize = UIAngle / buttonList.Length;
-
-        for(int i = 0; i < buttonList.Length; i++)
-        {
-
-        }
-
-
-    }
-
 }
