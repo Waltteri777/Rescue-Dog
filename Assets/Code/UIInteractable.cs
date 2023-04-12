@@ -5,27 +5,22 @@ using UnityEngine;
 
 public class UIInteractable : MonoBehaviour
 {
-    private InputReader inputReader;
-    [SerializeField]
+    public InputReader inputReader;
+    [System.Serializable]
     public class Action
     {
-        private Color color;
-        private string title;
-        private Sprite image;
+        public string title;
+        public Sprite image;
     }
     public Action[] options;
 
-    private void Start()
-    {
-        inputReader = GetComponent<InputReader>();
-    }
 
     private void Update()
     {
         if (inputReader.GetClickInput() == 1)
         {
-            Debug.Log("Toimii");
             RingMenuSpawn.ringMenuSpawn.SpawnRingMenu();
+            Debug.Log(inputReader.GetClickInput());
         }
     }
 }

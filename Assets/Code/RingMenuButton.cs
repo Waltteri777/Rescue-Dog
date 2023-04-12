@@ -8,6 +8,4 @@ public class RingMenuButton : MonoBehaviour
 {
     public TMP_Text buttonName;
     public Image button;
-
-
 }

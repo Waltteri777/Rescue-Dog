@@ -8,30 +8,25 @@ public class RingMenuSpawn : MonoBehaviour
     public RingMenu ringMenuPrefab;
     //public GameObject ringMenuUI;
     private float cameraDist = 5.0f;
+    //Pie menu y-axis offset from click spot
+    [SerializeField] private float offSet = 100f;
     private Vector2 mousePosition;
-    private InputReader inputReader;
+    public InputReader inputReader;
+    public Camera cam;
 
 
     private void Awake()
     {
         ringMenuSpawn = this;
-        inputReader = GetComponent<InputReader>();
-    }
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public void SpawnRingMenu()
     {
         RingMenu newRingMenu = Instantiate(ringMenuPrefab) as RingMenu;
         newRingMenu.transform.SetParent(transform, false);
-        //newRingMenu.transform.position = Camera.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, cameraDist), Camera.MonoOrStereoscopicEye.Mono);
+        mousePosition = inputReader.GetMousePos();
+        //Vector3 worldPos = cam.ScreenToWorldPoint(mousePosition);
+        newRingMenu.transform.position = new Vector3(mousePosition.x, (mousePosition.y + offSet), 0f);
+        Debug.Log(newRingMenu.transform.position);
     }
 }
