@@ -13,6 +13,9 @@ public class Mover : MonoBehaviour
     [SerializeField] private float playerSpeed = 1.0f;
     [SerializeField] private float playerRotation = 1.0f;
     [SerializeField] private float timer = 1.0f;
+    [SerializeField] private RingMenuSpawn ringMenuSpawn;
+    private LayerMask layerMaskUI = 5;
+    private float clickInput;
 
     private void Awake()
     {
@@ -23,14 +26,9 @@ public class Mover : MonoBehaviour
     private void FixedUpdate()
     {
         Vector3 moveInput = inputReader.GetMoveInput();
-        float clickInput = inputReader.GetClickInput();
+        clickInput = inputReader.GetClickInput();
         Move(moveInput);
-        Click(clickInput);
-    }
-
-    private void Update()
-    {
-        
+        Click();
     }
 
     //Player movement settings
@@ -40,22 +38,30 @@ public class Mover : MonoBehaviour
         rb.velocity = direction * playerSpeed;
     }
 
-    private void Click(float direction)
+    public void Click()
     {
-        //TODO: Change hit.collider to layerCheck(?) and ground check (now player can fly(:D))
-        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-        if (Physics.Raycast(ray: ray, hitInfo: out RaycastHit hit) && hit.collider && direction == 1)
-        {
-            if(coroutine != null) StopCoroutine(coroutine);
-            coroutine = StartCoroutine(ClickMove(hit.point));
-            targetPosition = hit.point;
+    //TODO: Change hit.collider to layerCheck(?) and ground check (now player can fly(:D))
+    Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+    if (Physics.Raycast(ray: ray, hitInfo: out RaycastHit hit) && hit.collider && clickInput == 1)
+    {
+        ringMenuSpawn.SpawnRingMenu();
+        //coroutine = StartCoroutine(ClickMove(hit.point));
+        targetPosition = hit.point;
         }
     }
 
-    private IEnumerator ClickMove(Vector3 target)
+    public void StartMoveCoroutine()
+    {
+        Debug.Log("StartmoveCoroutine toimii!");
+        if(coroutine != null) StopCoroutine(coroutine);
+        coroutine = StartCoroutine(ClickMove(targetPosition));
+    }
+
+    public IEnumerator ClickMove(Vector3 target)
     {
         while(Vector3.Distance(transform.position, target) > 0.1f)
         {
+            Debug.Log("Coroutine toimii!");
             Vector3 destination = Vector3.MoveTowards(transform.position, target, playerSpeed * Time.deltaTime);
             transform.position = destination;
             transform.rotation = Quaternion.LookRotation(destination);

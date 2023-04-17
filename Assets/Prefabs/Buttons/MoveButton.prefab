@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 1735710169492264481}
   - component: {fileID: 2347222722330316537}
   - component: {fileID: 5108335055674556556}
+  - component: {fileID: 8414070247181171871}
   m_Layer: 5
   m_Name: MoveButton
-  m_TagString: Untagged
+  m_TagString: MoveButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -134,6 +135,22 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &8414070247181171871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 98998334038422417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6263877ab008f844f9f42c9a7dcd3e20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonName: {fileID: 0}
+  button: {fileID: 0}
+  ID: 0
+  isClicked: 0
 --- !u!1 &4307017989291973805
 GameObject:
   m_ObjectHideFlags: 0

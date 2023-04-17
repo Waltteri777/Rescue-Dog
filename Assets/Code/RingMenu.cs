@@ -15,12 +15,12 @@ public class RingMenu : MonoBehaviour
         //SpawnButtons();
     }
 
-    /*public void SpawnButtons ()
+   /* public void SpawnButtons ()
     {
             Debug.Log("SpawnButtons toimii!");
             GameObject newButton = Instantiate(buttonPrefab);
             newButton.transform.SetParent(transform, false);
             newButton.transform.localPosition = new Vector3(100f, 100f, 0f);
 
-    } */
+    }  */
 }

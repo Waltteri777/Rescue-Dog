@@ -8,6 +8,13 @@ TagManager:
   - Pickup
   - Digin
   - Digout
+  - BarkButton
+  - DigButton
+  - DropButton
+  - InteractButton
+  - MoveButton
+  - PickupButton
+  - SniffButton
   layers:
   - Default
   - TransparentFX

@@ -20,7 +20,6 @@ public class UIInteractable : MonoBehaviour
         if (inputReader.GetClickInput() == 1)
         {
             RingMenuSpawn.ringMenuSpawn.SpawnRingMenu();
-            Debug.Log(inputReader.GetClickInput());
         }
     }
 }
