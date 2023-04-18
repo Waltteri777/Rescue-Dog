@@ -42,29 +42,32 @@ public class Mover : MonoBehaviour
     {
     //TODO: Change hit.collider to layerCheck(?) and ground check (now player can fly(:D))
     Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-    if (Physics.Raycast(ray: ray, hitInfo: out RaycastHit hit) && hit.collider && clickInput == 1)
+    if (Physics.Raycast(ray: ray, hitInfo: out RaycastHit hit) && hit.collider && clickInput == 1 && ringMenuSpawn.menuIsActive == false)
     {
-        ringMenuSpawn.SpawnRingMenu();
+        ringMenuSpawn.SpawnRingMenu(hit.collider.gameObject.tag);
         //coroutine = StartCoroutine(ClickMove(hit.point));
         targetPosition = hit.point;
+        Debug.Log(hit.collider.gameObject.tag);
         }
     }
 
     public void StartMoveCoroutine()
     {
-        Debug.Log("StartmoveCoroutine toimii!");
         if(coroutine != null) StopCoroutine(coroutine);
         coroutine = StartCoroutine(ClickMove(targetPosition));
     }
-
+    
     public IEnumerator ClickMove(Vector3 target)
     {
         while(Vector3.Distance(transform.position, target) > 0.1f)
         {
-            Debug.Log("Coroutine toimii!");
             Vector3 destination = Vector3.MoveTowards(transform.position, target, playerSpeed * Time.deltaTime);
             transform.position = destination;
             transform.rotation = Quaternion.LookRotation(destination);
+            //***
+            //TODO: Make this return other task if needed after player has moved next to interaction
+            //Replace null return with something like --> yield return StartCoroutine(**THING TO DO**);
+            //***
             yield return null;
         }
     }

@@ -1,6 +1,9 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -23,9 +26,40 @@ public class RingMenuSpawn : MonoBehaviour
         ringMenuSpawn = this;
     }
 
-    public void SpawnRingMenu()
+    GameObject FindChildWithTag(GameObject parent, String tag)
     {
+        GameObject child = null;
 
+        foreach (Transform transform in parent.transform)
+        {
+            if (transform.CompareTag(tag))
+            {
+                child = transform.gameObject;
+                child.SetActive(true);
+                break;
+            }
+        }
+        
+        return child;
+    }
+
+    public void SpawnRingMenu(String tag)
+    {
+        gameObject.SetActive(true);
+
+        for(int i = 0; i < transform.childCount; i++)
+        {
+            if(transform.GetChild(i).tag == "BarkButton" || transform.GetChild(i).tag == "MoveButton" 
+                || transform.GetChild(i).tag == "DropButton" || transform.GetChild(i).tag == "SniffButton")
+            {
+                transform.GetChild(i).gameObject.SetActive(true);
+            }
+            else
+            {
+                transform.GetChild(i).gameObject.SetActive(false);
+            }
+            
+        }
         /*ringMenuClone = Instantiate(ringMenuPrefab[0]);
         ringMenuClone.transform.SetParent(transform, false);
         mousePosition = inputReader.GetMousePos();
@@ -38,12 +72,26 @@ public class RingMenuSpawn : MonoBehaviour
         {
             ringMenuPrefab[i].SetActive(true);
         } */
-        gameObject.transform.position = Mouse.current.position.ReadValue();
-        gameObject.SetActive(true);
+        
+
+
+        if(tag !=null) 
+        {
+            menuIsActive = true;
+            gameObject.transform.position = Mouse.current.position.ReadValue();
+            GameObject GO = FindChildWithTag(gameObject, tag);
+            if(GO != null)
+            {
+                GO.SetActive(true);
+            }
+        }
     }
+
+    
 
     public void DisableMenu()
     {
         gameObject.SetActive(false);
+        menuIsActive = false;
     }
 }
