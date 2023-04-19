@@ -301,7 +301,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &158481956
 MonoBehaviour:
@@ -594,6 +594,12 @@ MonoBehaviour:
   menuManager: {fileID: 0}
   ringMenuSpawn: {fileID: 419279759}
   mover: {fileID: 2139524961}
+  pickUpEnabled: 0
+  sniffEnabled: 0
+  interactEnabled: 0
+  dropEnabled: 0
+  barkEnabled: 0
+  digEnabled: 0
 --- !u!1001 &457901619
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1106,7 +1112,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &663694400 stripped
 GameObject:
@@ -1696,7 +1702,7 @@ RectTransform:
   m_Children:
   - {fileID: 419279758}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1840,7 +1846,7 @@ Transform:
   - {fileID: 590555724}
   - {fileID: 885142102}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1474270841
 PrefabInstance:
@@ -2133,7 +2139,7 @@ GameObject:
   - component: {fileID: 1647116856}
   m_Layer: 0
   m_Name: PickUpObject
-  m_TagString: Pickup
+  m_TagString: PickupButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2222,7 +2228,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &1647116860
 SphereCollider:
@@ -2398,7 +2404,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1887895653
 GameObject:
@@ -2504,7 +2510,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &1887895659
 SphereCollider:
@@ -3040,15 +3046,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2139524953}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.235671, y: 1.46, z: 2.6691322}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 5.235671, y: 1.01, z: 2.6691322}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1714864453}
   - {fileID: 1571930747}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &2139524959
 Rigidbody:
@@ -3060,7 +3066,7 @@ Rigidbody:
   serializedVersion: 4
   m_Mass: 1
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 1
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -3072,10 +3078,10 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 84
   m_CollisionDetection: 0
 --- !u!114 &2139524960
 MonoBehaviour:
@@ -3102,9 +3108,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerSpeed: 5
-  playerRotation: 5
+  playerRotationSpeed: 3
   timer: 0.4
   ringMenuSpawn: {fileID: 419279759}
+  buttonClick: {fileID: 419279760}
 --- !u!114 &2139524962
 MonoBehaviour:
   m_ObjectHideFlags: 0

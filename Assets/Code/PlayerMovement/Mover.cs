@@ -11,9 +11,11 @@ public class Mover : MonoBehaviour
     private Coroutine coroutine;
     private Vector3 targetPosition;
     [SerializeField] private float playerSpeed = 1.0f;
-    [SerializeField] private float playerRotation = 1.0f;
+    [SerializeField] private float playerRotationSpeed = 3.0f;
     [SerializeField] private float timer = 1.0f;
+    private float distToGround = 0.1f;
     [SerializeField] private RingMenuSpawn ringMenuSpawn;
+    [SerializeField] private ButtonClick buttonClick;
     private LayerMask layerMaskUI = 5;
     private float clickInput;
 
@@ -47,7 +49,6 @@ public class Mover : MonoBehaviour
         ringMenuSpawn.SpawnRingMenu(hit.collider.gameObject.tag);
         //coroutine = StartCoroutine(ClickMove(hit.point));
         targetPosition = hit.point;
-        Debug.Log(hit.collider.gameObject.tag);
         }
     }
 
@@ -61,15 +62,120 @@ public class Mover : MonoBehaviour
     {
         while(Vector3.Distance(transform.position, target) > 0.1f)
         {
-            Vector3 destination = Vector3.MoveTowards(transform.position, target, playerSpeed * Time.deltaTime);
+            Vector3 destination = Vector3.MoveTowards(transform.position, new Vector3(target.x, 1f, target.z), playerSpeed * Time.deltaTime);
             transform.position = destination;
-            transform.rotation = Quaternion.LookRotation(destination);
+            Quaternion rotation = Quaternion.LookRotation(target - transform.position, Vector3.up);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, playerRotationSpeed * Time.deltaTime);
             //***
             //TODO: Make this return other task if needed after player has moved next to interaction
             //Replace null return with something like --> yield return StartCoroutine(**THING TO DO**);
             //***
+            //Figure out how to recognize if pickup should start
+            if(buttonClick.pickUpEnabled == true)
+            {
+                yield return StartCoroutine(PickUp());
+            }
+            if(buttonClick.interactEnabled == true)
+            {
+                yield return StartCoroutine(Interact());
+            }
+            if(buttonClick.digEnabled == true)
+            {
+                yield return StartCoroutine(Dig());
+            }
+
             yield return null;
         }
+    }
+
+    //TODO: STOP THIS FROM PLAYING INFINITELLY OR HOW TO SPELL IT IDK ;D
+    public IEnumerator PickUp()
+    {
+            //TODO: drop item
+
+            GameObject[] arr = GameObject.FindGameObjectsWithTag("PickupButton");
+
+            //assuming this code is running on the gameobject you want to find closest to
+            Vector3 pos = transform.position;            
+            float dist = 2f;
+            GameObject nearest = null;
+            foreach (GameObject go in arr)
+            {
+            //use sqr magnitude as its faster
+            float d = (go.transform.position - pos).sqrMagnitude;
+                if (d < dist)
+                {
+                    nearest = go;
+                    dist = d;
+                }
+            }
+            if(nearest != null)
+            {
+            //Disable pickup item collider (ONLY FIRST ONE so check the order) to prevent player getting stuck
+            nearest.GetComponent<Collider>().enabled = false;
+            //Move pickup item to player's child object "hands" (CHECK THE ORDER IN HIERARCHY)
+            nearest.transform.position = this.gameObject.transform.GetChild(0).transform.position;
+            //Sets the object to be child object of player
+            nearest.transform.SetParent(this.gameObject.transform.GetChild(0).gameObject.transform);
+        }
+        //buttonClick.pickUpEnabled = false;
+        yield return null;
+    }
+
+    public void Bark()
+    {
+        Debug.Log("HAUHAUHUHUAUAUAUHAU INTENSIFIES!!!!");
+        buttonClick.barkEnabled = false;
+    }
+
+    public IEnumerator Interact()
+    {
+        GameObject[] arr = GameObject.FindGameObjectsWithTag("InteractButton");
+
+        //assuming this code is running on the gameobject you want to find closest to
+        Vector3 pos = transform.position;
+        float dist = 2f;
+        GameObject nearest = null;
+        foreach (GameObject go in arr)
+        {
+            //use sqr magnitude as its faster
+            float d = (go.transform.position - pos).sqrMagnitude;
+            if (d < dist)
+            {
+                nearest = go;
+                dist = d;
+            }
+        }
+        if(nearest != null)
+        {
+            Debug.Log("Interacting with: " + nearest.name);
+        }
+        yield return null;
+    }
+
+    public IEnumerator Dig()
+    {
+        GameObject[] arr = GameObject.FindGameObjectsWithTag("DigButton");
+
+        //assuming this code is running on the gameobject you want to find closest to
+        Vector3 pos = transform.position;
+        float dist = 2f;
+        GameObject nearest = null;
+        foreach (GameObject go in arr)
+        {
+            //use sqr magnitude as its faster
+            float d = (go.transform.position - pos).sqrMagnitude;
+            if (d < dist)
+            {
+                nearest = go;
+                dist = d;
+            }
+        }
+        if (nearest != null)
+        {
+            Debug.Log("Diging near: " + nearest.name);
+        }
+        yield return null;
     }
 
     //When player is in interactable object's interact area (set as a trigger collider)
@@ -144,5 +250,10 @@ public class Mover : MonoBehaviour
                 timer = 5.0f;
             }
         }
+    }
+
+    private bool GroundCheck()
+    {
+        return Physics.Raycast(transform.position, Vector3.down, distToGround);
     }
 }

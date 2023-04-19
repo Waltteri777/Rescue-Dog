@@ -49,8 +49,8 @@ public class RingMenuSpawn : MonoBehaviour
 
         for(int i = 0; i < transform.childCount; i++)
         {
-            if(transform.GetChild(i).tag == "BarkButton" || transform.GetChild(i).tag == "MoveButton" 
-                || transform.GetChild(i).tag == "DropButton" || transform.GetChild(i).tag == "SniffButton")
+            if(transform.GetChild(i).tag is "BarkButton" or "MoveButton"
+                or "DropButton" or "SniffButton")
             {
                 transform.GetChild(i).gameObject.SetActive(true);
             }
@@ -58,7 +58,6 @@ public class RingMenuSpawn : MonoBehaviour
             {
                 transform.GetChild(i).gameObject.SetActive(false);
             }
-            
         }
         /*ringMenuClone = Instantiate(ringMenuPrefab[0]);
         ringMenuClone.transform.SetParent(transform, false);
@@ -72,8 +71,6 @@ public class RingMenuSpawn : MonoBehaviour
         {
             ringMenuPrefab[i].SetActive(true);
         } */
-        
-
 
         if(tag !=null) 
         {
@@ -86,8 +83,6 @@ public class RingMenuSpawn : MonoBehaviour
             }
         }
     }
-
-    
 
     public void DisableMenu()
     {
