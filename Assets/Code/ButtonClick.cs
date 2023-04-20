@@ -29,21 +29,6 @@ public class ButtonClick : MonoBehaviour
         RingMenuButton.ButtonClicked -= ProsessButtonClick;
     }
 
-    /*public void Click(RingMenuButton ringMenuButton)
-    {
-        if (ringMenuSpawn.menuIsActive == false)
-        {
-            ringMenuSpawn.SpawnRingMenu();
-        }
-
-        if (ringMenuSpawn.menuIsActive == true && ringMenuButton.isClicked == true)
-        {
-            Debug.Log("DESTRUCTION!!");
-            ringMenuSpawn.menuIsActive = false;
-            ringMenuButton.isClicked = false;
-        }
-     */
-
     public void ProsessButtonClick(RingMenuButton button)
     {
         switch (button.ID)
@@ -68,6 +53,7 @@ public class ButtonClick : MonoBehaviour
                 pickUpEnabled = true;
                 mover.StartMoveCoroutine();
                 ringMenuSpawn.DisableMenu();
+                dropEnabled = true;
                 break;
 
             //Interact
@@ -80,8 +66,9 @@ public class ButtonClick : MonoBehaviour
 
             //Drop
             case 4:
-                Debug.Log("Dropping an item");
-                dropEnabled = true;
+                Debug.Log("Dropping an item");               
+                mover.Drop();
+                ringMenuSpawn.DisableMenu();
                 break;
 
             //Dig

@@ -10,12 +10,9 @@ using UnityEngine.InputSystem;
 public class RingMenuSpawn : MonoBehaviour
 {
     public static RingMenuSpawn ringMenuSpawn;
-    public GameObject[] ringMenuPrefab;
-    private GameObject[] ringMenuClone;
-    //public GameObject ringMenuUI;
+    private ButtonClick buttonClick;
     //Pie menu y-axis offset from click spot
     [SerializeField] private float offSet = 100f;
-    private Vector2 mousePosition;
     public InputReader inputReader;
     public Camera cam;
     public bool menuIsActive = false;
@@ -24,6 +21,7 @@ public class RingMenuSpawn : MonoBehaviour
     public void Awake()
     {
         ringMenuSpawn = this;
+        buttonClick = GetComponent<ButtonClick>();
     }
 
     GameObject FindChildWithTag(GameObject parent, String tag)
@@ -50,7 +48,7 @@ public class RingMenuSpawn : MonoBehaviour
         for(int i = 0; i < transform.childCount; i++)
         {
             if(transform.GetChild(i).tag is "BarkButton" or "MoveButton"
-                or "DropButton" or "SniffButton")
+                or "SniffButton" || (buttonClick.dropEnabled == true && transform.GetChild(i).tag is "DropButton"))
             {
                 transform.GetChild(i).gameObject.SetActive(true);
             }
@@ -71,7 +69,7 @@ public class RingMenuSpawn : MonoBehaviour
         {
             ringMenuPrefab[i].SetActive(true);
         } */
-
+        
         if(tag !=null) 
         {
             menuIsActive = true;

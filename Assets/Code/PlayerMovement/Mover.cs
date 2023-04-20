@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.PlasticSCM.Editor.WebApi;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.HID;
 
@@ -10,35 +13,30 @@ public class Mover : MonoBehaviour
     private Rigidbody rb;
     private Coroutine coroutine;
     private Vector3 targetPosition;
-    [SerializeField] private float playerSpeed = 1.0f;
-    [SerializeField] private float playerRotationSpeed = 3.0f;
     [SerializeField] private float timer = 1.0f;
     private float distToGround = 0.1f;
     [SerializeField] private RingMenuSpawn ringMenuSpawn;
     [SerializeField] private ButtonClick buttonClick;
     private LayerMask layerMaskUI = 5;
     private float clickInput;
+    private NavMeshAgent agent;
 
     private void Awake()
     {
         inputReader = GetComponent<InputReader>();
         rb = GetComponent<Rigidbody>();
+        agent = GetComponent<NavMeshAgent>();
     }
 
     private void FixedUpdate()
     {
-        Vector3 moveInput = inputReader.GetMoveInput();
         clickInput = inputReader.GetClickInput();
-        Move(moveInput);
         Click();
     }
 
     //Player movement settings
     //direction is 0 or 1 so it doesnt matter if its multiplied or not
-    private void Move(Vector3 direction)
-    {
-        rb.velocity = direction * playerSpeed;
-    }
+
 
     public void Click()
     {
@@ -62,15 +60,21 @@ public class Mover : MonoBehaviour
     {
         while(Vector3.Distance(transform.position, target) > 0.1f)
         {
-            Vector3 destination = Vector3.MoveTowards(transform.position, new Vector3(target.x, 1f, target.z), playerSpeed * Time.deltaTime);
+            //OLD MOVE SYSTEM WITHOUT NAVMESH
+            /*Vector3 destination = Vector3.MoveTowards(transform.position, new Vector3(target.x, 1f, target.z), playerSpeed * Time.deltaTime);
             transform.position = destination;
             Quaternion rotation = Quaternion.LookRotation(target - transform.position, Vector3.up);
-            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, playerRotationSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, playerRotationSpeed * Time.deltaTime); */
             //***
             //TODO: Make this return other task if needed after player has moved next to interaction
             //Replace null return with something like --> yield return StartCoroutine(**THING TO DO**);
             //***
             //Figure out how to recognize if pickup should start
+
+            //NEW MOVE SYSTEM WITH NAVMESH
+            agent.SetDestination(target);
+
+
             if(buttonClick.pickUpEnabled == true)
             {
                 yield return StartCoroutine(PickUp());
@@ -112,11 +116,12 @@ public class Mover : MonoBehaviour
             if(nearest != null)
             {
             //Disable pickup item collider (ONLY FIRST ONE so check the order) to prevent player getting stuck
-            nearest.GetComponent<Collider>().enabled = false;
+            //nearest.GetComponent<Collider>().enabled = false;
             //Move pickup item to player's child object "hands" (CHECK THE ORDER IN HIERARCHY)
             nearest.transform.position = this.gameObject.transform.GetChild(0).transform.position;
             //Sets the object to be child object of player
             nearest.transform.SetParent(this.gameObject.transform.GetChild(0).gameObject.transform);
+            buttonClick.pickUpEnabled = false;
         }
         //buttonClick.pickUpEnabled = false;
         yield return null;
@@ -124,6 +129,7 @@ public class Mover : MonoBehaviour
 
     public void Bark()
     {
+        //TODO: ADD AUDIO FOR BARKING
         Debug.Log("HAUHAUHUHUAUAUAUHAU INTENSIFIES!!!!");
         buttonClick.barkEnabled = false;
     }
@@ -176,6 +182,32 @@ public class Mover : MonoBehaviour
             Debug.Log("Diging near: " + nearest.name);
         }
         yield return null;
+    }
+
+    public void Drop()
+    {
+        bool execDrop = true;
+        if(execDrop == true) 
+        {
+            foreach (Transform child in transform)
+            {
+                if (child.name == "hands")
+                {
+                    GameObject childHand = child.gameObject;
+                    foreach (Transform child2 in childHand.transform)
+                    {
+                        //Debug.Log(child2.tag);
+                        if (child2.tag == "PickupButton")
+                        {
+                            child2.transform.position = new Vector3(transform.position.x, 0.15f, transform.position.z);
+                            child2.transform.SetParent(null, true);
+                            execDrop = false;
+                            buttonClick.dropEnabled = false;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     //When player is in interactable object's interact area (set as a trigger collider)
