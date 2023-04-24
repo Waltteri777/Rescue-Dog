@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3998380729961345026}
   m_Layer: 5
   m_Name: DigButton
-  m_TagString: DigButton
+  m_TagString: Dig
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

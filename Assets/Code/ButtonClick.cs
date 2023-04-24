@@ -7,8 +7,6 @@ using UnityEngine.InputSystem;
 
 public class ButtonClick : MonoBehaviour
 {
-    //public RingMenuButton[] ringMenuButton;
-    [SerializeField] private MenuManager menuManager;
     [SerializeField] private RingMenuSpawn ringMenuSpawn;
     [SerializeField] private Mover mover;
     [HideInInspector] public bool pickUpEnabled = false;
@@ -18,7 +16,6 @@ public class ButtonClick : MonoBehaviour
     [HideInInspector] public bool barkEnabled = false;
     [HideInInspector] public bool digEnabled = false;
 
-    // Start is called before the first frame update
     private void Start()
     {
         RingMenuButton.ButtonClicked += ProsessButtonClick;

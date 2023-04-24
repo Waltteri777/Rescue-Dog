@@ -1,11 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.PlasticSCM.Editor.WebApi;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.HID;
+
 
 public class Mover : MonoBehaviour
 {
@@ -13,13 +11,13 @@ public class Mover : MonoBehaviour
     private Rigidbody rb;
     private Coroutine coroutine;
     private Vector3 targetPosition;
-    [SerializeField] private float timer = 1.0f;
-    private float distToGround = 0.1f;
+    [HideInInspector] public bool isDiggingEnabled = false;
+    private bool isTeleporting = false; 
     [SerializeField] private RingMenuSpawn ringMenuSpawn;
     [SerializeField] private ButtonClick buttonClick;
-    private LayerMask layerMaskUI = 5;
     private float clickInput;
     private NavMeshAgent agent;
+    private GameObject further = null;
 
     private void Awake()
     {
@@ -31,21 +29,19 @@ public class Mover : MonoBehaviour
     private void FixedUpdate()
     {
         clickInput = inputReader.GetClickInput();
-        Click();
+        if(!isTeleporting)
+        {
+            Click();
+        }
+        
     }
-
-    //Player movement settings
-    //direction is 0 or 1 so it doesnt matter if its multiplied or not
-
 
     public void Click()
     {
-    //TODO: Change hit.collider to layerCheck(?) and ground check (now player can fly(:D))
     Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
     if (Physics.Raycast(ray: ray, hitInfo: out RaycastHit hit) && hit.collider && clickInput == 1 && ringMenuSpawn.menuIsActive == false)
     {
         ringMenuSpawn.SpawnRingMenu(hit.collider.gameObject.tag);
-        //coroutine = StartCoroutine(ClickMove(hit.point));
         targetPosition = hit.point;
         }
     }
@@ -60,20 +56,8 @@ public class Mover : MonoBehaviour
     {
         while(Vector3.Distance(transform.position, target) > 0.1f)
         {
-            //OLD MOVE SYSTEM WITHOUT NAVMESH
-            /*Vector3 destination = Vector3.MoveTowards(transform.position, new Vector3(target.x, 1f, target.z), playerSpeed * Time.deltaTime);
-            transform.position = destination;
-            Quaternion rotation = Quaternion.LookRotation(target - transform.position, Vector3.up);
-            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, playerRotationSpeed * Time.deltaTime); */
-            //***
-            //TODO: Make this return other task if needed after player has moved next to interaction
-            //Replace null return with something like --> yield return StartCoroutine(**THING TO DO**);
-            //***
-            //Figure out how to recognize if pickup should start
 
-            //NEW MOVE SYSTEM WITH NAVMESH
             agent.SetDestination(target);
-
 
             if(buttonClick.pickUpEnabled == true)
             {
@@ -87,43 +71,38 @@ public class Mover : MonoBehaviour
             {
                 yield return StartCoroutine(Dig());
             }
-
-            yield return null;
+            yield break;
+            
         }
+        yield break;
     }
 
-    //TODO: STOP THIS FROM PLAYING INFINITELLY OR HOW TO SPELL IT IDK ;D
     public IEnumerator PickUp()
     {
-            //TODO: drop item
+            GameObject[] foundList = GameObject.FindGameObjectsWithTag("PickupButton");
 
-            GameObject[] arr = GameObject.FindGameObjectsWithTag("PickupButton");
+            //Sets the closest found gameobject tagged pickupButton to nearest
 
-            //assuming this code is running on the gameobject you want to find closest to
             Vector3 pos = transform.position;            
-            float dist = 2f;
+            float radius = 2f;
             GameObject nearest = null;
-            foreach (GameObject go in arr)
+            foreach (GameObject gameObject in foundList)
             {
-            //use sqr magnitude as its faster
-            float d = (go.transform.position - pos).sqrMagnitude;
-                if (d < dist)
+            float d = (gameObject.transform.position - pos).sqrMagnitude;
+                if (d < radius)
                 {
-                    nearest = go;
-                    dist = d;
+                    nearest = gameObject;
+                    radius = d;
                 }
             }
             if(nearest != null)
             {
-            //Disable pickup item collider (ONLY FIRST ONE so check the order) to prevent player getting stuck
-            //nearest.GetComponent<Collider>().enabled = false;
             //Move pickup item to player's child object "hands" (CHECK THE ORDER IN HIERARCHY)
             nearest.transform.position = this.gameObject.transform.GetChild(0).transform.position;
             //Sets the object to be child object of player
             nearest.transform.SetParent(this.gameObject.transform.GetChild(0).gameObject.transform);
             buttonClick.pickUpEnabled = false;
         }
-        //buttonClick.pickUpEnabled = false;
         yield return null;
     }
 
@@ -136,19 +115,18 @@ public class Mover : MonoBehaviour
 
     public IEnumerator Interact()
     {
-        GameObject[] arr = GameObject.FindGameObjectsWithTag("InteractButton");
+        GameObject[] foundList = GameObject.FindGameObjectsWithTag("InteractButton");
 
-        //assuming this code is running on the gameobject you want to find closest to
         Vector3 pos = transform.position;
         float dist = 2f;
         GameObject nearest = null;
-        foreach (GameObject go in arr)
+        foreach (GameObject gameObject in foundList)
         {
             //use sqr magnitude as its faster
-            float d = (go.transform.position - pos).sqrMagnitude;
+            float d = (gameObject.transform.position - pos).sqrMagnitude;
             if (d < dist)
             {
-                nearest = go;
+                nearest = gameObject;
                 dist = d;
             }
         }
@@ -161,49 +139,71 @@ public class Mover : MonoBehaviour
 
     public IEnumerator Dig()
     {
-        GameObject[] arr = GameObject.FindGameObjectsWithTag("DigButton");
-
-        //assuming this code is running on the gameobject you want to find closest to
-        Vector3 pos = transform.position;
-        float dist = 2f;
-        GameObject nearest = null;
-        foreach (GameObject go in arr)
+        if(buttonClick.digEnabled == true && isDiggingEnabled == true)
         {
-            //use sqr magnitude as its faster
-            float d = (go.transform.position - pos).sqrMagnitude;
-            if (d < dist)
+            GameObject[] foundList = GameObject.FindGameObjectsWithTag("Dig");
+
+            //assuming this code is running on the gameobject you want to find closest to
+            Vector3 pos = transform.position;
+            float dist = 1f;
+            //Distance to other side in tunnel is about 47 units
+            float distToOther = 50f;
+            GameObject nearest = null;
+            
+            foreach (GameObject go in foundList)
             {
-                nearest = go;
-                dist = d;
+                if ((pos - go.transform.position).sqrMagnitude < dist && (go.transform.name == "Out" || go.transform.name == "In"))
+                {
+                    nearest = go;
+                }
+                //Finding the other side of the tunnel, so it doesn't take the current position
+                if (((pos - go.transform.position).sqrMagnitude < distToOther && (pos - go.transform.position).sqrMagnitude > dist) 
+                    && (go.transform.name == "Out" || go.transform.name == "In") && go.transform != nearest)
+                {
+                    further = go;
+                }
             }
         }
-        if (nearest != null)
+        if(further != null)
         {
-            Debug.Log("Diging near: " + nearest.name);
+            Debug.Log((gameObject.GetComponent(typeof(Collider)) as Collider).name);
+            (gameObject.GetComponent(typeof(Collider)) as Collider).isTrigger = true;
+            //Teleport(further.transform.position);
+            isTeleporting = true;
+            transform.position = further.transform.position;
+            yield return new WaitForSeconds(5f);
+            (gameObject.GetComponent(typeof(Collider)) as Collider).isTrigger = false;
         }
-        yield return null;
+        buttonClick.digEnabled = false;
+        yield break;
+    }
+
+    private void Teleport(Vector3 position)
+    {
+        isTeleporting = true;
+        if(isTeleporting) 
+        {
+            StopCoroutine(ClickMove(position));
+            targetPosition = position;
+            isTeleporting = false;
+        }
     }
 
     public void Drop()
     {
-        bool execDrop = true;
-        if(execDrop == true) 
+
+        foreach (Transform child in transform)
         {
-            foreach (Transform child in transform)
+            if (child.name == "hands")
             {
-                if (child.name == "hands")
+                GameObject childHand = child.gameObject;
+                foreach (Transform child2 in childHand.transform)
                 {
-                    GameObject childHand = child.gameObject;
-                    foreach (Transform child2 in childHand.transform)
+                    if (child2.tag == "PickupButton")
                     {
-                        //Debug.Log(child2.tag);
-                        if (child2.tag == "PickupButton")
-                        {
-                            child2.transform.position = new Vector3(transform.position.x, 0.15f, transform.position.z);
-                            child2.transform.SetParent(null, true);
-                            execDrop = false;
-                            buttonClick.dropEnabled = false;
-                        }
+                        child2.transform.position = new Vector3(transform.position.x, 0.15f, transform.position.z);
+                        child2.transform.SetParent(null, true);
+                        buttonClick.dropEnabled = false;
                     }
                 }
             }
@@ -223,20 +223,20 @@ public class Mover : MonoBehaviour
         {
             //TODO: drop item
             
-            var arr = GameObject.FindGameObjectsWithTag("Pickup");
+            var foundList = GameObject.FindGameObjectsWithTag("Pickup");
 
             //assuming this code is running on the gameobject you want to find closest to
             var pos = transform.position; 
  
             float dist = float.PositiveInfinity;
             GameObject nearest = null;
-            foreach(var go in arr)
+            foreach(var gameObject in foundList)
             {
                 //use sqr magnitude as its faster
-                var d = (go.transform.position - pos).sqrMagnitude;
+                var d = (gameObject.transform.position - pos).sqrMagnitude;
                 if (d < dist)
                 {
-                    nearest = go;
+                    nearest = gameObject;
                     dist = d;
                 }
                 //Disable pickup item collider (ONLY FIRST ONE so check the order) to prevent player getting stuck
@@ -250,42 +250,11 @@ public class Mover : MonoBehaviour
             }
         }
 
-        if(collider.gameObject.tag == "Digin" && inputReader.GetInteractionInput() == 1)
+        if(collider.gameObject.tag == "Dig")
         {
             //TODO: Dig animation
             //TODO: Make player wait until dig animation is over and teleport to other side of the tunnel
-            if(timer > 0)
-            {
-                timer -= Time.deltaTime;
-            }
-
-            if (timer <= 0)
-            {
-                var arr = GameObject.FindGameObjectsWithTag("Digout");
-
-                //assuming this code is running on the gameobject you want to find closest to
-                var pos = transform.position;
-
-                float dist = float.PositiveInfinity;
-                GameObject nearest = null;
-                foreach (var go in arr)
-                {
-                    //use sqr magnitude as its faster
-                    var d = (go.transform.position - pos).sqrMagnitude;
-                    if (d < dist)
-                    {
-                        nearest = go;
-                        dist = d;
-                    }
-                }
-                this.transform.position = nearest.transform.position;
-                timer = 5.0f;
-            }
+            isDiggingEnabled = true;
         }
-    }
-
-    private bool GroundCheck()
-    {
-        return Physics.Raycast(transform.position, Vector3.down, distToGround);
     }
 }

@@ -14,12 +14,9 @@ public class RingMenuButton : MonoBehaviour
     public int ID;
     public bool isClicked;
     
-
+    //Buttons cannot return float value so this should fix it
     public void ActivateButton()
     {
-        if(ButtonClicked != null)
-        {
-            ButtonClicked.Invoke(this);
-        }
+        ButtonClicked?.Invoke(this);
     }
 }
