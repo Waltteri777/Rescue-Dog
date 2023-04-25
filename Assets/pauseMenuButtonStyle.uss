@@ -1,0 +1,80 @@
+.pauseMenuButton {
+    height: 40px;
+    width: 169px;
+    -unity-text-align: middle-center;
+    border-right-width: 10px;
+    border-left-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    border-top-left-radius: 26px;
+    border-bottom-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 26px;
+    background-color: rgb(112, 200, 255);
+    border-left-color: rgb(32, 125, 183);
+    border-right-color: rgb(7, 100, 159);
+    border-top-color: rgb(32, 125, 183);
+    border-bottom-color: rgb(32, 125, 183);
+    -unity-font-style: normal;
+    font-size: 16px;
+    color: rgb(0, 0, 0);
+    transform-origin: right;
+}
+
+.pauseMenuButton:hover {
+    height: 40px;
+    width: 169px;
+    -unity-text-align: middle-center;
+    border-right-width: 10px;
+    border-left-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    border-top-left-radius: 26px;
+    border-bottom-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 26px;
+    background-color: rgb(61, 158, 219);
+    border-left-color: rgb(32, 125, 183);
+    border-right-color: rgb(7, 100, 159);
+    border-top-color: rgb(32, 125, 183);
+    border-bottom-color: rgb(32, 125, 183);
+    -unity-font-style: normal;
+    font-size: 16px;
+    color: rgb(0, 0, 0);
+    transform-origin: right;
+}
+
+.pauseMenuButton:active {
+    height: 40px;
+    width: 169px;
+    -unity-text-align: middle-center;
+    border-right-width: 10px;
+    border-left-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    border-top-left-radius: 26px;
+    border-bottom-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 26px;
+    background-color: rgb(28, 110, 161);
+    border-left-color: rgb(32, 125, 183);
+    border-right-color: rgb(7, 100, 159);
+    border-top-color: rgb(32, 125, 183);
+    border-bottom-color: rgb(32, 125, 183);
+    -unity-font-style: normal;
+    font-size: 16px;
+    color: rgb(255, 255, 255);
+    transform-origin: right;
+}

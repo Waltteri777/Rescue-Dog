@@ -18,21 +18,35 @@ public class Mover : MonoBehaviour
     private float clickInput;
     private NavMeshAgent agent;
     private GameObject further = null;
+    private MeshRenderer meshRenderer;
 
     private void Awake()
     {
         inputReader = GetComponent<InputReader>();
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
+        meshRenderer = GetComponent<MeshRenderer>();
     }
 
     private void FixedUpdate()
     {
+        Debug.Log(isTeleporting + " is teleporting");
         clickInput = inputReader.GetClickInput();
-        if(!isTeleporting)
+        if(isTeleporting)
+        {
+            if (Vector3.Distance(further.transform.position, transform.position) < 0.2f)
+            {
+                meshRenderer.enabled = true;
+            }
+            StopAllCoroutines();
+            targetPosition = further.transform.position;
+            isTeleporting = false;
+        }
+        if(!isTeleporting && clickInput == 1)
         {
             Click();
         }
+        
         
     }
 
@@ -54,6 +68,7 @@ public class Mover : MonoBehaviour
     
     public IEnumerator ClickMove(Vector3 target)
     {
+        Debug.Log("ClickMove");
         while(Vector3.Distance(transform.position, target) > 0.1f)
         {
 
@@ -79,6 +94,7 @@ public class Mover : MonoBehaviour
 
     public IEnumerator PickUp()
     {
+        Debug.Log("PickUp");
             GameObject[] foundList = GameObject.FindGameObjectsWithTag("PickupButton");
 
             //Sets the closest found gameobject tagged pickupButton to nearest
@@ -108,6 +124,7 @@ public class Mover : MonoBehaviour
 
     public void Bark()
     {
+        Debug.Log("Bark");
         //TODO: ADD AUDIO FOR BARKING
         Debug.Log("HAUHAUHUHUAUAUAUHAU INTENSIFIES!!!!");
         buttonClick.barkEnabled = false;
@@ -115,6 +132,7 @@ public class Mover : MonoBehaviour
 
     public IEnumerator Interact()
     {
+        Debug.Log("Interact");
         GameObject[] foundList = GameObject.FindGameObjectsWithTag("InteractButton");
 
         Vector3 pos = transform.position;
@@ -139,7 +157,8 @@ public class Mover : MonoBehaviour
 
     public IEnumerator Dig()
     {
-        if(buttonClick.digEnabled == true && isDiggingEnabled == true)
+        Debug.Log("Dig");
+        if (buttonClick.digEnabled == true && isDiggingEnabled == true)
         {
             GameObject[] foundList = GameObject.FindGameObjectsWithTag("Dig");
 
@@ -168,11 +187,14 @@ public class Mover : MonoBehaviour
         {
             Debug.Log((gameObject.GetComponent(typeof(Collider)) as Collider).name);
             (gameObject.GetComponent(typeof(Collider)) as Collider).isTrigger = true;
+            meshRenderer.enabled = false;
             //Teleport(further.transform.position);
             isTeleporting = true;
-            transform.position = further.transform.position;
-            yield return new WaitForSeconds(5f);
+            //transform.position = further.transform.position;
+            //yield return new WaitForSeconds(5);
             (gameObject.GetComponent(typeof(Collider)) as Collider).isTrigger = false;
+            Debug.Log(Vector3.Distance(further.transform.position, transform.position) + " dist further and playter");
+            
         }
         buttonClick.digEnabled = false;
         yield break;
