@@ -46,8 +46,6 @@ public class Mover : MonoBehaviour
         {
             Click();
         }
-        
-        
     }
 
     public void Click()

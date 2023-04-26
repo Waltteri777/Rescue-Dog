@@ -62,6 +62,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Cancel"",
+                    ""type"": ""Button"",
+                    ""id"": ""d02112ac-29ef-4ff4-8758-a88dc086b316"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -174,6 +183,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""MousePosition"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6092889d-6003-4122-8cb9-0e65f366dce9"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""Cancel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -182,19 +202,19 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             ""id"": ""b7e884a9-e59b-4d47-bc80-52516c2da2f9"",
             ""actions"": [
                 {
-                    ""name"": ""MousePosition"",
+                    ""name"": ""Click"",
                     ""type"": ""Value"",
-                    ""id"": ""b0f19ea6-171b-40ff-9d5c-83ae65680544"",
-                    ""expectedControlType"": ""Vector2"",
+                    ""id"": ""82ed8f8b-1309-4b3c-a83d-22bde8d178fc"",
+                    ""expectedControlType"": ""Integer"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Click"",
-                    ""type"": ""Value"",
-                    ""id"": ""82ed8f8b-1309-4b3c-a83d-22bde8d178fc"",
-                    ""expectedControlType"": ""Integer"",
+                    ""name"": ""Cancel"",
+                    ""type"": ""Button"",
+                    ""id"": ""dfb42f6e-e727-48a0-a110-5aab7acbb32d"",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
@@ -203,23 +223,23 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             ""bindings"": [
                 {
                     ""name"": """",
-                    ""id"": ""4d7ef2dd-85a8-4e7a-9709-4f6f6a5cb1fb"",
-                    ""path"": ""<Mouse>/position"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""MousePosition"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""0c46fe17-a637-4edc-958a-08de58732161"",
                     ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""665dd441-a321-4404-a316-e75895499344"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Cancel"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -262,10 +282,11 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_KBM_Interact = m_KBM.FindAction("Interact", throwIfNotFound: true);
         m_KBM_click = m_KBM.FindAction("click", throwIfNotFound: true);
         m_KBM_MousePosition = m_KBM.FindAction("MousePosition", throwIfNotFound: true);
+        m_KBM_Cancel = m_KBM.FindAction("Cancel", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
-        m_UI_MousePosition = m_UI.FindAction("MousePosition", throwIfNotFound: true);
         m_UI_Click = m_UI.FindAction("Click", throwIfNotFound: true);
+        m_UI_Cancel = m_UI.FindAction("Cancel", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -331,6 +352,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_KBM_Interact;
     private readonly InputAction m_KBM_click;
     private readonly InputAction m_KBM_MousePosition;
+    private readonly InputAction m_KBM_Cancel;
     public struct KBMActions
     {
         private @PlayerControls m_Wrapper;
@@ -339,6 +361,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @Interact => m_Wrapper.m_KBM_Interact;
         public InputAction @click => m_Wrapper.m_KBM_click;
         public InputAction @MousePosition => m_Wrapper.m_KBM_MousePosition;
+        public InputAction @Cancel => m_Wrapper.m_KBM_Cancel;
         public InputActionMap Get() { return m_Wrapper.m_KBM; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -360,6 +383,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @MousePosition.started += instance.OnMousePosition;
             @MousePosition.performed += instance.OnMousePosition;
             @MousePosition.canceled += instance.OnMousePosition;
+            @Cancel.started += instance.OnCancel;
+            @Cancel.performed += instance.OnCancel;
+            @Cancel.canceled += instance.OnCancel;
         }
 
         private void UnregisterCallbacks(IKBMActions instance)
@@ -376,6 +402,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @MousePosition.started -= instance.OnMousePosition;
             @MousePosition.performed -= instance.OnMousePosition;
             @MousePosition.canceled -= instance.OnMousePosition;
+            @Cancel.started -= instance.OnCancel;
+            @Cancel.performed -= instance.OnCancel;
+            @Cancel.canceled -= instance.OnCancel;
         }
 
         public void RemoveCallbacks(IKBMActions instance)
@@ -397,14 +426,14 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     // UI
     private readonly InputActionMap m_UI;
     private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
-    private readonly InputAction m_UI_MousePosition;
     private readonly InputAction m_UI_Click;
+    private readonly InputAction m_UI_Cancel;
     public struct UIActions
     {
         private @PlayerControls m_Wrapper;
         public UIActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @MousePosition => m_Wrapper.m_UI_MousePosition;
         public InputAction @Click => m_Wrapper.m_UI_Click;
+        public InputAction @Cancel => m_Wrapper.m_UI_Cancel;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -414,22 +443,22 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_UIActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_UIActionsCallbackInterfaces.Add(instance);
-            @MousePosition.started += instance.OnMousePosition;
-            @MousePosition.performed += instance.OnMousePosition;
-            @MousePosition.canceled += instance.OnMousePosition;
             @Click.started += instance.OnClick;
             @Click.performed += instance.OnClick;
             @Click.canceled += instance.OnClick;
+            @Cancel.started += instance.OnCancel;
+            @Cancel.performed += instance.OnCancel;
+            @Cancel.canceled += instance.OnCancel;
         }
 
         private void UnregisterCallbacks(IUIActions instance)
         {
-            @MousePosition.started -= instance.OnMousePosition;
-            @MousePosition.performed -= instance.OnMousePosition;
-            @MousePosition.canceled -= instance.OnMousePosition;
             @Click.started -= instance.OnClick;
             @Click.performed -= instance.OnClick;
             @Click.canceled -= instance.OnClick;
+            @Cancel.started -= instance.OnCancel;
+            @Cancel.performed -= instance.OnCancel;
+            @Cancel.canceled -= instance.OnCancel;
         }
 
         public void RemoveCallbacks(IUIActions instance)
@@ -471,10 +500,11 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnInteract(InputAction.CallbackContext context);
         void OnClick(InputAction.CallbackContext context);
         void OnMousePosition(InputAction.CallbackContext context);
+        void OnCancel(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
-        void OnMousePosition(InputAction.CallbackContext context);
         void OnClick(InputAction.CallbackContext context);
+        void OnCancel(InputAction.CallbackContext context);
     }
 }

@@ -18,6 +18,7 @@ public class InputReader : MonoBehaviour
     private Vector2 mousePos;
     private float worldClickPosition;
     private float interactionInput;
+    private float escape;
     private PlayerInput playerInput;
     //primary control method set to KBM, can be adjusted in code to use other methods
     private ControlMethod currentControlMethod = ControlMethod.KBM;
@@ -51,6 +52,12 @@ public class InputReader : MonoBehaviour
         mousePos = context.ReadValue<Vector2>();
     }
 
+    public void Escape(InputAction.CallbackContext context)
+    {
+        currentControlMethod = ControlMethod.KBM;
+        escape = context.ReadValue<float>();
+    }
+
     public Vector3 GetMoveInput()
     {
         return this.moveInput;
@@ -69,5 +76,10 @@ public class InputReader : MonoBehaviour
     public Vector2 GetMousePos() 
     {
         return mousePos;
+    }
+
+    public float GetEscape()
+    {
+        return escape;
     }
 }

@@ -40,6 +40,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Cancel",
+                    "type": "Button",
+                    "id": "d02112ac-29ef-4ff4-8758-a88dc086b316",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -152,6 +161,17 @@
                     "action": "MousePosition",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6092889d-6003-4122-8cb9-0e65f366dce9",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KBM",
+                    "action": "Cancel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -160,19 +180,19 @@
             "id": "b7e884a9-e59b-4d47-bc80-52516c2da2f9",
             "actions": [
                 {
-                    "name": "MousePosition",
+                    "name": "Click",
                     "type": "Value",
-                    "id": "b0f19ea6-171b-40ff-9d5c-83ae65680544",
-                    "expectedControlType": "Vector2",
+                    "id": "82ed8f8b-1309-4b3c-a83d-22bde8d178fc",
+                    "expectedControlType": "Integer",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Click",
-                    "type": "Value",
-                    "id": "82ed8f8b-1309-4b3c-a83d-22bde8d178fc",
-                    "expectedControlType": "Integer",
+                    "name": "Cancel",
+                    "type": "Button",
+                    "id": "dfb42f6e-e727-48a0-a110-5aab7acbb32d",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -181,23 +201,23 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "4d7ef2dd-85a8-4e7a-9709-4f6f6a5cb1fb",
-                    "path": "<Mouse>/position",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "MousePosition",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "0c46fe17-a637-4edc-958a-08de58732161",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "665dd441-a321-4404-a316-e75895499344",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Cancel",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
