@@ -188,7 +188,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""6092889d-6003-4122-8cb9-0e65f366dce9"",
                     ""path"": ""<Keyboard>/escape"",
-                    ""interactions"": """",
+                    ""interactions"": ""Tap(duration=0.2)"",
                     ""processors"": """",
                     ""groups"": ""KBM"",
                     ""action"": ""Cancel"",

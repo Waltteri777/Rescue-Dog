@@ -7,14 +7,21 @@ public class PauseMenuAwake : MonoBehaviour
 {
     public UIDocument document;
     public InputReader inputReader;
+    private float escape;
 
     void Update()
     {
-        Debug.Log(inputReader.GetEscape());
-        if(inputReader.GetEscape() == 1)
+        escape = inputReader.GetEscape();
+        Debug.Log(escape);
+        if (escape == 1)
         {
-            Debug.Log("toimii");
-            document.enabled = true;
+            PauseMenu();
         }
+        Debug.Log(inputReader.GetEscape());
+    }
+
+    public void PauseMenu()
+    {
+        document.enabled = true;
     }
 }

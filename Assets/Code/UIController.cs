@@ -27,13 +27,13 @@ public class UIController : MonoBehaviour
         continueButton.clicked += ContinuePressed;
         //quitToMainMenuButton += QuitToMainMenu;
         quitGameButton.clicked += QuitGame;
-
     }
 
     private void ContinuePressed()
     {
+        Debug.Log("Continue pressed!");
         menuIsActive = !menuIsActive;
-        this.enabled = false;
+        gameObject.SetActive(false);
     }
 
     private void QuitToMainMenu()

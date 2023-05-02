@@ -10,6 +10,7 @@ public class InputReader : MonoBehaviour
     public enum ControlMethod
     {
         KBM,
+        UI,
         touchScreen
     }
     //stores move input of movement controls

@@ -1765,7 +1765,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1426750632
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2268,6 +2268,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1731238892}
   - component: {fileID: 1731238893}
+  - component: {fileID: 1731238894}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -2304,6 +2305,76 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   document: {fileID: 1426750632}
   inputReader: {fileID: 117142862}
+--- !u!114 &1731238894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1731238891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 1b9a14ab28ed5754a8c9694f67c3611b, type: 3}
+  m_NotificationBehavior: 2
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 3d18d8e9-2434-4051-b508-d655462dbdce
+    m_ActionName: KBM/Move[/Keyboard/space,/Keyboard/ctrl,/Keyboard/a,/Keyboard/d,/Keyboard/w,/Keyboard/s]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 76f5840a-e973-4bda-a63b-5ed3234f51e0
+    m_ActionName: KBM/Interact[/Keyboard/f]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: babae9b8-2f3e-4e23-a6e0-909072818778
+    m_ActionName: KBM/click[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b4e46b62-b84d-4a41-a3c1-5930698371db
+    m_ActionName: KBM/MousePosition[/Mouse/position]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1731238893}
+        m_TargetAssemblyTypeName: PauseMenuAwake, Assembly-CSharp
+        m_MethodName: PauseMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: d02112ac-29ef-4ff4-8758-a88dc086b316
+    m_ActionName: KBM/Cancel[/Keyboard/t]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 82ed8f8b-1309-4b3c-a83d-22bde8d178fc
+    m_ActionName: UI/Click[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: dfb42f6e-e727-48a0-a110-5aab7acbb32d
+    m_ActionName: UI/Cancel[/Keyboard/escape]
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: KBM
+  m_DefaultActionMap: KBM
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &1887895653
 GameObject:
   m_ObjectHideFlags: 0

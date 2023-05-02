@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
 
-
 public class Mover : MonoBehaviour
 {
     private InputReader inputReader;
@@ -12,7 +11,7 @@ public class Mover : MonoBehaviour
     private Coroutine coroutine;
     private Vector3 targetPosition;
     [HideInInspector] public bool isDiggingEnabled = false;
-    private bool isTeleporting = false; 
+    private bool isTeleporting = false;
     [SerializeField] private RingMenuSpawn ringMenuSpawn;
     [SerializeField] private ButtonClick buttonClick;
     private float clickInput;
@@ -50,11 +49,11 @@ public class Mover : MonoBehaviour
 
     public void Click()
     {
-    Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-    if (Physics.Raycast(ray: ray, hitInfo: out RaycastHit hit) && hit.collider && clickInput == 1 && ringMenuSpawn.menuIsActive == false)
-    {
-        ringMenuSpawn.SpawnRingMenu(hit.collider.gameObject.tag);
-        targetPosition = hit.point;
+        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+        if (Physics.Raycast(ray: ray, hitInfo: out RaycastHit hit) && hit.collider && clickInput == 1 && ringMenuSpawn.menuIsActive == false)
+        {
+            ringMenuSpawn.SpawnRingMenu(hit.collider.gameObject.tag);
+            targetPosition = hit.point;
         }
     }
 
@@ -69,7 +68,6 @@ public class Mover : MonoBehaviour
         Debug.Log("ClickMove");
         while(Vector3.Distance(transform.position, target) > 0.1f)
         {
-
             agent.SetDestination(target);
 
             if(buttonClick.pickUpEnabled == true)
@@ -85,7 +83,6 @@ public class Mover : MonoBehaviour
                 yield return StartCoroutine(Dig());
             }
             yield break;
-            
         }
         yield break;
     }
@@ -239,7 +236,7 @@ public class Mover : MonoBehaviour
             Debug.Log("F is pressed and interacts with object");
         }
 
-        if(collider.gameObject.tag == "Pickup" && inputReader.GetInteractionInput()== 1)
+        if(collider.gameObject.tag == "Pickup" && inputReader.GetInteractionInput() == 1)
         {
             //TODO: drop item
             
