@@ -82,7 +82,7 @@ public class ButtonClick : MonoBehaviour
                 mover.Bark();
                 break;
 
-            /*//Drink
+            //Drink
             case 7:
                 mover.StartMoveCoroutine();
                 ringMenuSpawn.DisableMenu();
@@ -93,7 +93,7 @@ public class ButtonClick : MonoBehaviour
                 pullEnabled = true;
                 mover.StartMoveCoroutine();
                 ringMenuSpawn.DisableMenu();
-                break;*/
+                break;
 
             default:
                 Debug.Log("Ei löydy :(");

@@ -17,6 +17,7 @@ TagManager:
   - SniffButton
   - Dig
   - Tunnel
+  - Obstacle
   layers:
   - Default
   - TransparentFX

@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class Mover : MonoBehaviour
 {
@@ -11,24 +13,38 @@ public class Mover : MonoBehaviour
     private Coroutine coroutine;
     private Vector3 targetPosition;
     [HideInInspector] public bool isDiggingEnabled = false;
+    private bool isPauseEnabled = false;
     private bool isTeleporting = false;
     [SerializeField] private RingMenuSpawn ringMenuSpawn;
     [SerializeField] private ButtonClick buttonClick;
     private float clickInput;
+    private float escape;
     private NavMeshAgent agent;
     private GameObject further = null;
+    public GameObject floatingText;
     private MeshRenderer meshRenderer;
+    private RaycastHit hit;
+    private Vector3 clickHitPos;
+    private Vector3 offSet;
+    public UIDocument document;
+    private TextMeshPro popUpText;
 
     private void Awake()
     {
+        offSet = new Vector3(transform.position.x, (transform.position.y + 5), transform.position.z);
         inputReader = GetComponent<InputReader>();
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
         meshRenderer = GetComponent<MeshRenderer>();
+        popUpText = floatingText.transform.GetComponent<TextMeshPro>();
     }
 
     private void FixedUpdate()
     {
+        if(ringMenuSpawn.menuIsActive)
+        {
+            clickInput = 0;
+        }
         clickInput = inputReader.GetClickInput();
         if(isTeleporting)
         {
@@ -62,8 +78,9 @@ public class Mover : MonoBehaviour
     public void Click()
     {
         Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-        if (Physics.Raycast(ray: ray, hitInfo: out RaycastHit hit) && hit.collider && clickInput == 1 && ringMenuSpawn.menuIsActive == false)
+        if (Physics.Raycast(ray: ray, hitInfo: out hit) && hit.collider && clickInput == 1 && ringMenuSpawn.menuIsActive == false)
         {
+            clickHitPos = hit.transform.position;
             ringMenuSpawn.SpawnRingMenu(hit.collider.gameObject.tag);
             targetPosition = hit.point;
         }
@@ -134,6 +151,9 @@ public class Mover : MonoBehaviour
 
     public void Bark()
     {
+        popUpText.gameObject.transform.position = offSet;
+        popUpText.text = "Bark Bark!";
+        //Instantiate(floatingText, transform.position + offSet, Quaternion.identity);
         Debug.Log("Bark");
         //TODO: ADD AUDIO FOR BARKING
         Debug.Log("HAUHAUHUHUAUAUAUHAU INTENSIFIES!!!!");
@@ -208,7 +228,19 @@ public class Mover : MonoBehaviour
 
     public IEnumerator Pull()
     {
-        Debug.Log("pulling!");
+        //TODO: Add Animation
+        //TODO: After animation destroy obstacle
+        //Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+        yield return new WaitForSeconds(2);
+        if (Vector3.Distance(transform.position, clickHitPos) < 1.5f)
+        {
+            Debug.Log("Destroying?");
+            if (hit.collider.gameObject.CompareTag("Obstacle"))
+            {
+                hit.collider.gameObject.SetActive(false);
+            }
+        }
+        //Debug.Log("pulling!");
         buttonClick.pullEnabled = false;
         yield break;
     }
