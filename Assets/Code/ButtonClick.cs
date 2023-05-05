@@ -15,6 +15,7 @@ public class ButtonClick : MonoBehaviour
     [HideInInspector] public bool dropEnabled = false;
     [HideInInspector] public bool barkEnabled = false;
     [HideInInspector] public bool digEnabled = false;
+    [HideInInspector] public bool pullEnabled = false;
 
     private void Start()
     {
@@ -32,7 +33,6 @@ public class ButtonClick : MonoBehaviour
         {
             //Walk here
             case 0:
-                Debug.Log("Walk here works!");
                 mover.StartMoveCoroutine();
                 ringMenuSpawn.DisableMenu();
                 break;
@@ -70,9 +70,9 @@ public class ButtonClick : MonoBehaviour
 
             //Dig
             case 5:
-                Debug.Log("Digging hole");
                 digEnabled = true;
                 mover.StartMoveCoroutine();
+                ringMenuSpawn.DisableMenu();
                 break;
 
             //Bark
@@ -81,6 +81,19 @@ public class ButtonClick : MonoBehaviour
                 barkEnabled = true;
                 mover.Bark();
                 break;
+
+            /*//Drink
+            case 7:
+                mover.StartMoveCoroutine();
+                ringMenuSpawn.DisableMenu();
+                break;
+
+            //Pull
+            case 8:
+                pullEnabled = true;
+                mover.StartMoveCoroutine();
+                ringMenuSpawn.DisableMenu();
+                break;*/
 
             default:
                 Debug.Log("Ei löydy :(");

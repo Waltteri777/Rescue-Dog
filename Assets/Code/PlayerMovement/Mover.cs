@@ -29,19 +29,31 @@ public class Mover : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Debug.Log(isTeleporting + " is teleporting");
         clickInput = inputReader.GetClickInput();
         if(isTeleporting)
         {
+            meshRenderer.enabled = false;
+
             if (Vector3.Distance(further.transform.position, transform.position) < 0.2f)
             {
-                meshRenderer.enabled = true;
+                //meshRenderer.enabled = false;
+                isTeleporting = false;
             }
-            StopAllCoroutines();
+
+            //StopAllCoroutines();
             targetPosition = further.transform.position;
-            isTeleporting = false;
+            agent.speed = 1000f;
+            agent.acceleration = 1000f;
         }
-        if(!isTeleporting && clickInput == 1)
+
+        if (!isTeleporting)
+        {
+            agent.speed = 3.5f;
+            agent.acceleration = 8f;
+            meshRenderer.enabled = true;
+        }
+
+        if (!isTeleporting && clickInput == 1)
         {
             Click();
         }
@@ -65,7 +77,6 @@ public class Mover : MonoBehaviour
     
     public IEnumerator ClickMove(Vector3 target)
     {
-        Debug.Log("ClickMove");
         while(Vector3.Distance(transform.position, target) > 0.1f)
         {
             agent.SetDestination(target);
@@ -81,6 +92,10 @@ public class Mover : MonoBehaviour
             if(buttonClick.digEnabled == true)
             {
                 yield return StartCoroutine(Dig());
+            }
+            if(buttonClick.pullEnabled == true)
+            {
+                yield return StartCoroutine(Pull());
             }
             yield break;
         }
@@ -152,8 +167,7 @@ public class Mover : MonoBehaviour
 
     public IEnumerator Dig()
     {
-        Debug.Log("Dig");
-        if (buttonClick.digEnabled == true && isDiggingEnabled == true)
+        if (buttonClick.digEnabled == true)
         {
             GameObject[] foundList = GameObject.FindGameObjectsWithTag("Dig");
 
@@ -180,18 +194,22 @@ public class Mover : MonoBehaviour
         }
         if(further != null)
         {
-            Debug.Log((gameObject.GetComponent(typeof(Collider)) as Collider).name);
             (gameObject.GetComponent(typeof(Collider)) as Collider).isTrigger = true;
-            meshRenderer.enabled = false;
             //Teleport(further.transform.position);
             isTeleporting = true;
             //transform.position = further.transform.position;
             //yield return new WaitForSeconds(5);
             (gameObject.GetComponent(typeof(Collider)) as Collider).isTrigger = false;
-            Debug.Log(Vector3.Distance(further.transform.position, transform.position) + " dist further and playter");
-            
+            //Debug.Log(Vector3.Distance(further.transform.position, transform.position) + " dist further and player");
         }
         buttonClick.digEnabled = false;
+        yield break;
+    }
+
+    public IEnumerator Pull()
+    {
+        Debug.Log("pulling!");
+        buttonClick.pullEnabled = false;
         yield break;
     }
 
@@ -208,7 +226,6 @@ public class Mover : MonoBehaviour
 
     public void Drop()
     {
-
         foreach (Transform child in transform)
         {
             if (child.name == "hands")

@@ -49,8 +49,11 @@ public class InputReader : MonoBehaviour
 
     public void MousePosition(InputAction.CallbackContext context)
     {
-        currentControlMethod = ControlMethod.KBM;
-        mousePos = context.ReadValue<Vector2>();
+        if (context.phase == InputActionPhase.Performed)
+        {
+            currentControlMethod = ControlMethod.KBM;
+            mousePos = context.ReadValue<Vector2>();
+        }
     }
 
     public void Escape(InputAction.CallbackContext context)

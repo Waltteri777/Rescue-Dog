@@ -31,7 +31,6 @@ public class UIController : MonoBehaviour
 
     private void ContinuePressed()
     {
-        Debug.Log("Continue pressed!");
         menuIsActive = !menuIsActive;
         gameObject.SetActive(false);
     }

@@ -12,12 +12,10 @@ public class PauseMenuAwake : MonoBehaviour
     void Update()
     {
         escape = inputReader.GetEscape();
-        Debug.Log(escape);
         if (escape == 1)
         {
             PauseMenu();
         }
-        Debug.Log(inputReader.GetEscape());
     }
 
     public void PauseMenu()
