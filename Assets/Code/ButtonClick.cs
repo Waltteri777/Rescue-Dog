@@ -55,7 +55,6 @@ public class ButtonClick : MonoBehaviour
 
             //Interact
             case 3:
-                Debug.Log("Interacting with...");
                 interactEnabled = true;
                 mover.StartMoveCoroutine();
                 ringMenuSpawn.DisableMenu();
@@ -77,9 +76,9 @@ public class ButtonClick : MonoBehaviour
 
             //Bark
             case 6:
-                Debug.Log("HAUHAUHAUHAU!!");
                 barkEnabled = true;
                 mover.Bark();
+                ringMenuSpawn.DisableMenu();
                 break;
 
             //Drink

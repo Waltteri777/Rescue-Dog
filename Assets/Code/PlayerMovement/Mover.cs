@@ -18,7 +18,7 @@ public class Mover : MonoBehaviour
     [SerializeField] private RingMenuSpawn ringMenuSpawn;
     [SerializeField] private ButtonClick buttonClick;
     private float clickInput;
-    private float escape;
+    private float escape = 0f;
     private NavMeshAgent agent;
     private GameObject further = null;
     public GameObject floatingText;
@@ -28,6 +28,7 @@ public class Mover : MonoBehaviour
     private Vector3 offSet;
     public UIDocument document;
     private TextMeshPro popUpText;
+    public Camera camera;
 
     private void Awake()
     {
@@ -46,7 +47,7 @@ public class Mover : MonoBehaviour
             clickInput = 0;
         }
         clickInput = inputReader.GetClickInput();
-        if(isTeleporting)
+        /*if(isTeleporting)
         {
             meshRenderer.enabled = false;
 
@@ -60,7 +61,7 @@ public class Mover : MonoBehaviour
             targetPosition = further.transform.position;
             agent.speed = 1000f;
             agent.acceleration = 1000f;
-        }
+        }*/
 
         if (!isTeleporting)
         {
@@ -72,6 +73,11 @@ public class Mover : MonoBehaviour
         if (!isTeleporting && clickInput == 1)
         {
             Click();
+        }
+
+        if(inputReader.GetEscape() == 1)
+        {
+            document.gameObject.SetActive(true);
         }
     }
 
@@ -101,6 +107,10 @@ public class Mover : MonoBehaviour
             if(buttonClick.pickUpEnabled == true)
             {
                 yield return StartCoroutine(PickUp());
+            }
+            if(buttonClick.barkEnabled == true)
+            {
+                yield return StartCoroutine(Bark());
             }
             if(buttonClick.interactEnabled == true)
             {
@@ -149,20 +159,27 @@ public class Mover : MonoBehaviour
         yield return null;
     }
 
-    public void Bark()
+    public IEnumerator Bark()
     {
+        Vector3 vector = camera.transform.position - transform.position;
+        vector.x = vector.z = 0.0f;
+        transform.LookAt(camera.transform.position - vector);
+        transform.Rotate(0, 180, 0);
+
+        popUpText.gameObject.SetActive(true);
         popUpText.gameObject.transform.position = offSet;
         popUpText.text = "Bark Bark!";
+        yield return new WaitForSeconds(2);
+        popUpText.gameObject.SetActive(false);
         //Instantiate(floatingText, transform.position + offSet, Quaternion.identity);
         Debug.Log("Bark");
         //TODO: ADD AUDIO FOR BARKING
-        Debug.Log("HAUHAUHUHUAUAUAUHAU INTENSIFIES!!!!");
         buttonClick.barkEnabled = false;
+        yield break;
     }
 
     public IEnumerator Interact()
     {
-        Debug.Log("Interact");
         GameObject[] foundList = GameObject.FindGameObjectsWithTag("InteractButton");
 
         Vector3 pos = transform.position;
@@ -170,17 +187,15 @@ public class Mover : MonoBehaviour
         GameObject nearest = null;
         foreach (GameObject gameObject in foundList)
         {
-            //use sqr magnitude as its faster
-            float d = (gameObject.transform.position - pos).sqrMagnitude;
-            if (d < dist)
+            if (gameObject.CompareTag("InteractButton"))
             {
                 nearest = gameObject;
-                dist = d;
             }
         }
         if(nearest != null)
         {
-            Debug.Log("Interacting with: " + nearest.name);
+            yield return new WaitForSeconds(2);
+            Debug.Log("Interacting with: " + nearest.gameObject.name);
         }
         yield return null;
     }
@@ -231,10 +246,11 @@ public class Mover : MonoBehaviour
         //TODO: Add Animation
         //TODO: After animation destroy obstacle
         //Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-        yield return new WaitForSeconds(2);
+        Debug.Log("Pulling animation playing");
+        yield return new WaitForSeconds(3);
         if (Vector3.Distance(transform.position, clickHitPos) < 1.5f)
         {
-            Debug.Log("Destroying?");
+            
             if (hit.collider.gameObject.CompareTag("Obstacle"))
             {
                 hit.collider.gameObject.SetActive(false);
