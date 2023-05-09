@@ -71,6 +71,24 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""CameraRotation"",
+                    ""type"": ""Button"",
+                    ""id"": ""0d636f34-54c9-4984-b71b-509819883a48"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""New action"",
+                    ""type"": ""Button"",
+                    ""id"": ""50b0f7c3-1873-42b6-8f8f-0be0f375f5c9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -194,6 +212,28 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""Cancel"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2a69ed8b-1348-44a4-b17a-de126f86d202"",
+                    ""path"": ""<Keyboard>/g"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""CameraRotation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0b28c230-4a2a-4df7-8c1d-976cb9817f23"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""New action"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -283,6 +323,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_KBM_click = m_KBM.FindAction("click", throwIfNotFound: true);
         m_KBM_MousePosition = m_KBM.FindAction("MousePosition", throwIfNotFound: true);
         m_KBM_Cancel = m_KBM.FindAction("Cancel", throwIfNotFound: true);
+        m_KBM_CameraRotation = m_KBM.FindAction("CameraRotation", throwIfNotFound: true);
+        m_KBM_Newaction = m_KBM.FindAction("New action", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Click = m_UI.FindAction("Click", throwIfNotFound: true);
@@ -353,6 +395,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_KBM_click;
     private readonly InputAction m_KBM_MousePosition;
     private readonly InputAction m_KBM_Cancel;
+    private readonly InputAction m_KBM_CameraRotation;
+    private readonly InputAction m_KBM_Newaction;
     public struct KBMActions
     {
         private @PlayerControls m_Wrapper;
@@ -362,6 +406,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @click => m_Wrapper.m_KBM_click;
         public InputAction @MousePosition => m_Wrapper.m_KBM_MousePosition;
         public InputAction @Cancel => m_Wrapper.m_KBM_Cancel;
+        public InputAction @CameraRotation => m_Wrapper.m_KBM_CameraRotation;
+        public InputAction @Newaction => m_Wrapper.m_KBM_Newaction;
         public InputActionMap Get() { return m_Wrapper.m_KBM; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -386,6 +432,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Cancel.started += instance.OnCancel;
             @Cancel.performed += instance.OnCancel;
             @Cancel.canceled += instance.OnCancel;
+            @CameraRotation.started += instance.OnCameraRotation;
+            @CameraRotation.performed += instance.OnCameraRotation;
+            @CameraRotation.canceled += instance.OnCameraRotation;
+            @Newaction.started += instance.OnNewaction;
+            @Newaction.performed += instance.OnNewaction;
+            @Newaction.canceled += instance.OnNewaction;
         }
 
         private void UnregisterCallbacks(IKBMActions instance)
@@ -405,6 +457,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Cancel.started -= instance.OnCancel;
             @Cancel.performed -= instance.OnCancel;
             @Cancel.canceled -= instance.OnCancel;
+            @CameraRotation.started -= instance.OnCameraRotation;
+            @CameraRotation.performed -= instance.OnCameraRotation;
+            @CameraRotation.canceled -= instance.OnCameraRotation;
+            @Newaction.started -= instance.OnNewaction;
+            @Newaction.performed -= instance.OnNewaction;
+            @Newaction.canceled -= instance.OnNewaction;
         }
 
         public void RemoveCallbacks(IKBMActions instance)
@@ -501,6 +559,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnClick(InputAction.CallbackContext context);
         void OnMousePosition(InputAction.CallbackContext context);
         void OnCancel(InputAction.CallbackContext context);
+        void OnCameraRotation(InputAction.CallbackContext context);
+        void OnNewaction(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

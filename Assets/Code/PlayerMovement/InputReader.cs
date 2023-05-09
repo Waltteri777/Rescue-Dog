@@ -20,6 +20,8 @@ public class InputReader : MonoBehaviour
     private float worldClickPosition;
     private float interactionInput;
     private float escape;
+    private float camRotate;
+    private float rightClick;
     private PlayerInput playerInput;
     //primary control method set to KBM, can be adjusted in code to use other methods
     private ControlMethod currentControlMethod = ControlMethod.KBM;
@@ -62,6 +64,17 @@ public class InputReader : MonoBehaviour
         escape = context.ReadValue<float>();
     }
 
+    public void CameraRotate(InputAction.CallbackContext context)
+    {
+        currentControlMethod = ControlMethod.KBM;
+        camRotate = context.ReadValue<float>();
+    }
+    public void CancelMenu(InputAction.CallbackContext context)
+    {
+        currentControlMethod = ControlMethod.KBM;
+        rightClick = context.ReadValue<float>();
+    }
+
     public Vector3 GetMoveInput()
     {
         return this.moveInput;
@@ -85,5 +98,15 @@ public class InputReader : MonoBehaviour
     public float GetEscape()
     {
         return escape;
+    }
+
+    public float GetCamRotate()
+    {
+        return camRotate;
+    }
+
+    public float GetRightClick()
+    {
+        return rightClick;
     }
 }

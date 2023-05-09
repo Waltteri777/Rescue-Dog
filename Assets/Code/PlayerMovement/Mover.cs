@@ -18,7 +18,6 @@ public class Mover : MonoBehaviour
     [SerializeField] private RingMenuSpawn ringMenuSpawn;
     [SerializeField] private ButtonClick buttonClick;
     private float clickInput;
-    private float escape = 0f;
     private NavMeshAgent agent;
     private GameObject further = null;
     public GameObject floatingText;
@@ -29,6 +28,9 @@ public class Mover : MonoBehaviour
     public UIDocument document;
     private TextMeshPro popUpText;
     public Camera camera;
+    public Transform camPos1;
+    public Transform camPos2;
+     
 
     private void Awake()
     {
@@ -42,10 +44,6 @@ public class Mover : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(ringMenuSpawn.menuIsActive)
-        {
-            clickInput = 0;
-        }
         clickInput = inputReader.GetClickInput();
         /*if(isTeleporting)
         {
@@ -63,13 +61,6 @@ public class Mover : MonoBehaviour
             agent.acceleration = 1000f;
         }*/
 
-        if (!isTeleporting)
-        {
-            agent.speed = 3.5f;
-            agent.acceleration = 8f;
-            meshRenderer.enabled = true;
-        }
-
         if (!isTeleporting && clickInput == 1)
         {
             Click();
@@ -77,7 +68,22 @@ public class Mover : MonoBehaviour
 
         if(inputReader.GetEscape() == 1)
         {
+            
             document.gameObject.SetActive(true);
+        }
+
+        if (inputReader.GetRightClick() == 1)
+        {
+            ringMenuSpawn.DisableMenu();
+        }
+
+        if(inputReader.GetCamRotate() == 1)
+        {
+            camera.transform.SetPositionAndRotation(camPos2.position, camPos2.rotation);
+        }
+        else
+        {
+            camera.transform.SetPositionAndRotation(camPos1.position, camPos1.rotation);
         }
     }
 
@@ -100,17 +106,19 @@ public class Mover : MonoBehaviour
     
     public IEnumerator ClickMove(Vector3 target)
     {
-        while(Vector3.Distance(transform.position, target) > 0.1f)
+
+        if (buttonClick.barkEnabled == true)
+        {
+            yield return StartCoroutine(Bark());
+        }
+
+        while (Vector3.Distance(transform.position, target) > 0.1f)
         {
             agent.SetDestination(target);
 
             if(buttonClick.pickUpEnabled == true)
             {
                 yield return StartCoroutine(PickUp());
-            }
-            if(buttonClick.barkEnabled == true)
-            {
-                yield return StartCoroutine(Bark());
             }
             if(buttonClick.interactEnabled == true)
             {
@@ -150,12 +158,12 @@ public class Mover : MonoBehaviour
             }
             if(nearest != null)
             {
-            //Move pickup item to player's child object "hands" (CHECK THE ORDER IN HIERARCHY)
-            nearest.transform.position = this.gameObject.transform.GetChild(0).transform.position;
-            //Sets the object to be child object of player
-            nearest.transform.SetParent(this.gameObject.transform.GetChild(0).gameObject.transform);
-            buttonClick.pickUpEnabled = false;
-        }
+                //Move pickup item to player's child object "hands" (CHECK THE ORDER IN HIERARCHY)
+                nearest.transform.position = this.gameObject.transform.GetChild(0).transform.position;
+                //Sets the object to be child object of player
+                nearest.transform.SetParent(this.gameObject.transform.GetChild(0).gameObject.transform);
+                buttonClick.pickUpEnabled = false;
+            }
         yield return null;
     }
 
@@ -167,10 +175,14 @@ public class Mover : MonoBehaviour
         transform.Rotate(0, 180, 0);
 
         popUpText.gameObject.SetActive(true);
-        popUpText.gameObject.transform.position = offSet;
-        popUpText.text = "Bark Bark!";
-        yield return new WaitForSeconds(2);
-        popUpText.gameObject.SetActive(false);
+        if (popUpText.gameObject.activeSelf)
+        {
+            popUpText.gameObject.transform.position = offSet;
+            popUpText.text = "Bark Bark!";
+            yield return new WaitForSeconds(2);
+            popUpText.gameObject.SetActive(false);
+        }
+        
         //Instantiate(floatingText, transform.position + offSet, Quaternion.identity);
         Debug.Log("Bark");
         //TODO: ADD AUDIO FOR BARKING
@@ -183,7 +195,6 @@ public class Mover : MonoBehaviour
         GameObject[] foundList = GameObject.FindGameObjectsWithTag("InteractButton");
 
         Vector3 pos = transform.position;
-        float dist = 2f;
         GameObject nearest = null;
         foreach (GameObject gameObject in foundList)
         {
@@ -231,7 +242,7 @@ public class Mover : MonoBehaviour
         {
             (gameObject.GetComponent(typeof(Collider)) as Collider).isTrigger = true;
             //Teleport(further.transform.position);
-            isTeleporting = true;
+            //isTeleporting = true;
             //transform.position = further.transform.position;
             //yield return new WaitForSeconds(5);
             (gameObject.GetComponent(typeof(Collider)) as Collider).isTrigger = false;
@@ -296,12 +307,12 @@ public class Mover : MonoBehaviour
     //Player can interact with object by pressing F as default KBM controls
     private void OnTriggerStay(Collider collider)
     {
-        if(collider.gameObject.tag == "Interactable" && inputReader.GetInteractionInput() == 1)
+        if(collider.gameObject.CompareTag("Interactable") && inputReader.GetInteractionInput() == 1)
         {
             Debug.Log("F is pressed and interacts with object");
         }
 
-        if(collider.gameObject.tag == "Pickup" && inputReader.GetInteractionInput() == 1)
+        if(collider.gameObject.CompareTag("Pickup") && inputReader.GetInteractionInput() == 1)
         {
             //TODO: drop item
             

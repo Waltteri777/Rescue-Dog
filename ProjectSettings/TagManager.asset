@@ -18,6 +18,8 @@ TagManager:
   - Dig
   - Tunnel
   - Obstacle
+  - Ground
+  - BackGround
   layers:
   - Default
   - TransparentFX
