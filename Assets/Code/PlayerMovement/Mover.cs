@@ -5,10 +5,12 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
+using FMODUnity;
 
 public class Mover : MonoBehaviour
 {
     private InputReader inputReader;
+    public EventReference soundManager;
     private Rigidbody rb;
     private Coroutine coroutine;
     private Vector3 targetPosition;
@@ -26,8 +28,8 @@ public class Mover : MonoBehaviour
     private Vector3 clickHitPos;
     private Vector3 offSet;
     public UIDocument document;
-    private TextMeshPro popUpText;
-    public Camera camera;
+    private TextMeshProUGUI popUpText;
+    public Camera mainCamera;
     public Transform camPos1;
     public Transform camPos2;
      
@@ -39,7 +41,7 @@ public class Mover : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
         meshRenderer = GetComponent<MeshRenderer>();
-        popUpText = floatingText.transform.GetComponent<TextMeshPro>();
+        popUpText = floatingText.GetComponent<TextMeshProUGUI>();
     }
 
     private void FixedUpdate()
@@ -79,11 +81,16 @@ public class Mover : MonoBehaviour
 
         if(inputReader.GetCamRotate() == 1)
         {
-            camera.transform.SetPositionAndRotation(camPos2.position, camPos2.rotation);
+            mainCamera.transform.SetPositionAndRotation(camPos2.position, camPos2.rotation);
         }
         else
         {
-            camera.transform.SetPositionAndRotation(camPos1.position, camPos1.rotation);
+            mainCamera.transform.SetPositionAndRotation(camPos1.position, camPos1.rotation);
+        }
+
+        if (floatingText.activeSelf)
+        {
+            floatingText.transform.position = offSet;
         }
     }
 
@@ -169,21 +176,10 @@ public class Mover : MonoBehaviour
 
     public IEnumerator Bark()
     {
-        Vector3 vector = camera.transform.position - transform.position;
-        vector.x = vector.z = 0.0f;
-        transform.LookAt(camera.transform.position - vector);
-        transform.Rotate(0, 180, 0);
-
-        popUpText.gameObject.SetActive(true);
-        if (popUpText.gameObject.activeSelf)
-        {
-            popUpText.gameObject.transform.position = offSet;
-            popUpText.text = "Bark Bark!";
-            yield return new WaitForSeconds(2);
-            popUpText.gameObject.SetActive(false);
-        }
-        
-        //Instantiate(floatingText, transform.position + offSet, Quaternion.identity);
+        RuntimeManager.PlayOneShot(soundManager);
+        floatingText.SetActive(true);
+        yield return new WaitForSeconds(2);
+        floatingText.SetActive(false);
         Debug.Log("Bark");
         //TODO: ADD AUDIO FOR BARKING
         buttonClick.barkEnabled = false;
@@ -254,6 +250,7 @@ public class Mover : MonoBehaviour
 
     public IEnumerator Pull()
     {
+        //TODO: rope physics!
         //TODO: Add Animation
         //TODO: After animation destroy obstacle
         //Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());

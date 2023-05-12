@@ -5,13 +5,24 @@ using UnityEngine.SceneManagement;
 
 public class ChangeScene : MonoBehaviour
 {
-    public Collider playerCol;
+    public SceneTransitionCollision sceneChange;
+    public Animator transition;
+    public float transitionTime = 1f;
 
-    private void OnTriggerEnter(Collider collider)
+    private void Update()
     {
-        if (collider == playerCol)
+        if (sceneChange.isSceneChange == true)
         {
-            SceneManager.LoadScene("Tutorial");
+            StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex + 1));
         }
+    }
+    
+
+
+    private IEnumerator LoadLevel(int levelIndex)
+    {
+        transition.SetTrigger("Start");
+        yield return new WaitForSeconds(transitionTime);
+        SceneManager.LoadScene(levelIndex);
     }
 }
