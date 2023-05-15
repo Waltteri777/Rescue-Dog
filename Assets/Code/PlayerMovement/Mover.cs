@@ -10,7 +10,10 @@ using FMODUnity;
 public class Mover : MonoBehaviour
 {
     private InputReader inputReader;
-    public EventReference soundManager;
+    public EventReference dogBark;
+    public EventReference birdSing;
+    public EventReference wind1;
+    public EventReference diggingSound1;
     private Rigidbody rb;
     private Coroutine coroutine;
     private Vector3 targetPosition;
@@ -22,16 +25,15 @@ public class Mover : MonoBehaviour
     private float clickInput;
     private NavMeshAgent agent;
     private GameObject further = null;
-    public GameObject floatingText;
     private MeshRenderer meshRenderer;
     private RaycastHit hit;
     private Vector3 clickHitPos;
     private Vector3 offSet;
     public UIDocument document;
-    private TextMeshProUGUI popUpText;
     public Camera mainCamera;
     public Transform camPos1;
     public Transform camPos2;
+    private float timerRandom;
      
 
     private void Awake()
@@ -41,7 +43,8 @@ public class Mover : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
         meshRenderer = GetComponent<MeshRenderer>();
-        popUpText = floatingText.GetComponent<TextMeshProUGUI>();
+        timerRandom = Random.Range(7.0f, 30.0f);
+        RuntimeManager.PlayOneShotAttached(wind1, gameObject);
     }
 
     private void FixedUpdate()
@@ -62,6 +65,7 @@ public class Mover : MonoBehaviour
             agent.speed = 1000f;
             agent.acceleration = 1000f;
         }*/
+        Debug.Log("click Input " +  clickInput);
 
         if (!isTeleporting && clickInput == 1)
         {
@@ -88,9 +92,12 @@ public class Mover : MonoBehaviour
             mainCamera.transform.SetPositionAndRotation(camPos1.position, camPos1.rotation);
         }
 
-        if (floatingText.activeSelf)
+        timerRandom -= Time.deltaTime;
+        if(timerRandom <= 0)
         {
-            floatingText.transform.position = offSet;
+            
+            RuntimeManager.PlayOneShotAttached(birdSing, gameObject);
+            timerRandom = timerRandom = Random.Range(7.0f, 30.0f);
         }
     }
 
@@ -176,12 +183,8 @@ public class Mover : MonoBehaviour
 
     public IEnumerator Bark()
     {
-        RuntimeManager.PlayOneShot(soundManager);
-        floatingText.SetActive(true);
-        yield return new WaitForSeconds(2);
-        floatingText.SetActive(false);
+        RuntimeManager.PlayOneShotAttached(dogBark, gameObject);
         Debug.Log("Bark");
-        //TODO: ADD AUDIO FOR BARKING
         buttonClick.barkEnabled = false;
         yield break;
     }
@@ -213,7 +216,7 @@ public class Mover : MonoBehaviour
         {
             GameObject[] foundList = GameObject.FindGameObjectsWithTag("Dig");
 
-            //assuming this code is running on the gameobject you want to find closest to
+            //assuming this code is running on the gameobject to find closest to
             Vector3 pos = transform.position;
             float dist = 1f;
             //Distance to other side in tunnel is about 47 units
@@ -224,23 +227,30 @@ public class Mover : MonoBehaviour
             {
                 if ((pos - go.transform.position).sqrMagnitude < dist && (go.transform.name == "Out" || go.transform.name == "In"))
                 {
+                    Debug.Log(go.transform.position + " nearest");
                     nearest = go;
                 }
                 //Finding the other side of the tunnel, so it doesn't take the current position
                 if (((pos - go.transform.position).sqrMagnitude < distToOther && (pos - go.transform.position).sqrMagnitude > dist) 
                     && (go.transform.name == "Out" || go.transform.name == "In") && go.transform != nearest)
                 {
+                    Debug.Log(go.transform.position + " further 2");
                     further = go;
                 }
             }
         }
         if(further != null)
         {
+            RuntimeManager.PlayOneShotAttached(diggingSound1, gameObject);
+            Debug.Log(further.transform.position + " furhter 1");
             (gameObject.GetComponent(typeof(Collider)) as Collider).isTrigger = true;
             //Teleport(further.transform.position);
             //isTeleporting = true;
             //transform.position = further.transform.position;
             //yield return new WaitForSeconds(5);
+            targetPosition = transform.position;
+            //transform.position = further.transform.position;
+            
             (gameObject.GetComponent(typeof(Collider)) as Collider).isTrigger = false;
             //Debug.Log(Vector3.Distance(further.transform.position, transform.position) + " dist further and player");
         }
@@ -254,21 +264,63 @@ public class Mover : MonoBehaviour
         //TODO: Add Animation
         //TODO: After animation destroy obstacle
         //Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-        Debug.Log("Pulling animation playing");
-        yield return new WaitForSeconds(3);
-        if (Vector3.Distance(transform.position, clickHitPos) < 1.5f)
+
+        GameObject[] foundList = GameObject.FindGameObjectsWithTag("Obstacle");
+
+        //Sets the closest found gameobject tagged pickupButton to nearest
+
+        Vector3 pos = transform.position;
+        float radius = 2f;
+        GameObject nearest = null;
+        foreach (GameObject gameObject in foundList)
         {
-            
-            if (hit.collider.gameObject.CompareTag("Obstacle"))
+            float d = (gameObject.transform.position - pos).sqrMagnitude;
+            if (d < radius)
             {
-                hit.collider.gameObject.SetActive(false);
+                nearest = gameObject;
+                radius = d;
             }
         }
-        //Debug.Log("pulling!");
-        buttonClick.pullEnabled = false;
-        yield break;
-    }
+        if (nearest != null)
+        {
+            //Move pickup item to player's child object "hands" (CHECK THE ORDER IN HIERARCHY)
+            nearest.transform.position = this.gameObject.transform.GetChild(0).transform.position;
+            //Sets the object to be child object of player
+            nearest.transform.SetParent(this.gameObject.transform.GetChild(0).gameObject.transform);
+            buttonClick.pickUpEnabled = false;
+        }
+        Debug.Log("Pulling animation playing");
+        Debug.Log(nearest.name);
+        yield return new WaitForSeconds(1);
+        Collider collider1 = nearest.GetComponent<Collider>();
+        collider1.gameObject.SetActive(false);
+        foreach (Transform child in transform)
+        {
+            if (child.name == "hands")
+            {
+                GameObject childHand = child.gameObject;
+                foreach (Transform child2 in childHand.transform)
+                {
+                    if (child2.tag == "Obstacle")
+                    {
+                        child2.transform.position = new Vector3(transform.position.x, 0.15f, transform.position.z);
+                        child2.transform.SetParent(null, true);
+                        buttonClick.dropEnabled = false;
+                    }
+                }
+            }
+            if (Vector3.Distance(transform.position, clickHitPos) < 1.5f)
+            {
+                if (hit.collider.gameObject.CompareTag("Obstacle"))
+                {
 
+                }
+            }
+            //Debug.Log("pulling!");
+            buttonClick.pullEnabled = false;
+            yield break;
+        }
+    }
     private void Teleport(Vector3 position)
     {
         isTeleporting = true;

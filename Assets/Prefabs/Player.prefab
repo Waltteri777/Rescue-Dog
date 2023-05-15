@@ -302,12 +302,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41d0ae68badda4f498aa9b18181ada45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dogBark:
+    Guid:
+      Data1: 476326969
+      Data2: 1313180433
+      Data3: -812013691
+      Data4: -2114753781
+    Path: event:/Bark
+  birdSing:
+    Guid:
+      Data1: 440562581
+      Data2: 1137113955
+      Data3: -522250329
+      Data4: -282908992
+    Path: event:/BirdSing
+  wind1:
+    Guid:
+      Data1: 1777258797
+      Data2: 1096421202
+      Data3: -1204698468
+      Data4: -2002149089
+    Path: event:/AmbientWind1RescueDog
+  diggingSound1:
+    Guid:
+      Data1: 888486118
+      Data2: 1298231371
+      Data3: 282387894
+      Data4: -166335459
+    Path: event:/DiggingDogRescueDog1
   isDiggingEnabled: 0
   ringMenuSpawn: {fileID: 0}
   buttonClick: {fileID: 0}
-  floatingText: {fileID: 0}
   document: {fileID: 0}
-  camera: {fileID: 0}
+  mainCamera: {fileID: 0}
   camPos1: {fileID: 0}
   camPos2: {fileID: 0}
 --- !u!195 &5883526119786393212

@@ -585,6 +585,7 @@ MonoBehaviour:
   MasterBanks:
   - Master
   Banks:
+  - Ambient
   - DogSound
   BanksToLoad: []
   LiveUpdatePort: 9264
