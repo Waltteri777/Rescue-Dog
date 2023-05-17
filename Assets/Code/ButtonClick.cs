@@ -33,6 +33,7 @@ public class ButtonClick : MonoBehaviour
         {
             //Walk here
             case 0:
+                Debug.Log("Coroutine starts from ButtonClick!");
                 mover.StartMoveCoroutine();
                 ringMenuSpawn.DisableMenu();
                 break;

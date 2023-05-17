@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1762610089426591857}
   - component: {fileID: 89994690866775564}
   - component: {fileID: 6153479993953215554}
+  - component: {fileID: 1362347175718391954}
   m_Layer: 5
   m_Name: RingMenuCanvas
   m_TagString: Untagged
@@ -102,6 +103,18 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &1362347175718391954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1813047324765062434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 089049be58c18624aa5b827b881ad5fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1990889333064842022
 GameObject:
   m_ObjectHideFlags: 0
@@ -210,7 +223,7 @@ RectTransform:
   m_Children:
   - {fileID: 1477336277779967702}
   - {fileID: 3154277924173959938}
-  - {fileID: 8953036950783173610}
+  - {fileID: 30670704367424210}
   - {fileID: 8998015124661282424}
   - {fileID: 6578614803959382725}
   - {fileID: 7748811436667916770}
@@ -1142,7 +1155,7 @@ PrefabInstance:
     - target: {fileID: 7482254728536709170, guid: ff7d878e88b99d641baa2de10a80a433, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
-      objectReference: {fileID: 1874488243229276713}
+      objectReference: {fileID: 7372639276013964049}
     - target: {fileID: 7482254728536709170, guid: ff7d878e88b99d641baa2de10a80a433, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: RingMenuButton, Assembly-CSharp
@@ -1152,7 +1165,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ff7d878e88b99d641baa2de10a80a433, type: 3}
---- !u!114 &1874488243229276713 stripped
+--- !u!224 &30670704367424210 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 4414028004204496029, guid: ff7d878e88b99d641baa2de10a80a433, type: 3}
+  m_PrefabInstance: {fileID: 4408234321805612623}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7372639276013964049 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6592655908391574878, guid: ff7d878e88b99d641baa2de10a80a433, type: 3}
   m_PrefabInstance: {fileID: 4408234321805612623}
@@ -1163,11 +1181,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6263877ab008f844f9f42c9a7dcd3e20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!224 &8953036950783173610 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 4414028004204496029, guid: ff7d878e88b99d641baa2de10a80a433, type: 3}
-  m_PrefabInstance: {fileID: 4408234321805612623}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4719302637694805879
 PrefabInstance:
   m_ObjectHideFlags: 0

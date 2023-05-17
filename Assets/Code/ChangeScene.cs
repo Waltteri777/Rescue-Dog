@@ -17,10 +17,9 @@ public class ChangeScene : MonoBehaviour
         }
     }
     
-
-
     private IEnumerator LoadLevel(int levelIndex)
     {
+        yield return new WaitForSeconds(2f);
         transition.SetTrigger("Start");
         yield return new WaitForSeconds(transitionTime);
         SceneManager.LoadScene(levelIndex);

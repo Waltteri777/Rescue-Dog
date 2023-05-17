@@ -10,10 +10,6 @@ using FMODUnity;
 public class Mover : MonoBehaviour
 {
     private InputReader inputReader;
-    public EventReference dogBark;
-    public EventReference birdSing;
-    public EventReference wind1;
-    public EventReference diggingSound1;
     private Rigidbody rb;
     private Coroutine coroutine;
     private Vector3 targetPosition;
@@ -30,21 +26,23 @@ public class Mover : MonoBehaviour
     private Vector3 clickHitPos;
     private Vector3 offSet;
     public UIDocument document;
-    public Camera mainCamera;
+    private Camera mainCamera;
     public Transform camPos1;
     public Transform camPos2;
     private float timerRandom;
+    public Sounds sounds;
      
 
     private void Awake()
     {
+        mainCamera = Camera.main;
         offSet = new Vector3(transform.position.x, (transform.position.y + 5), transform.position.z);
         inputReader = GetComponent<InputReader>();
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
         meshRenderer = GetComponent<MeshRenderer>();
         timerRandom = Random.Range(7.0f, 30.0f);
-        RuntimeManager.PlayOneShotAttached(wind1, gameObject);
+        RuntimeManager.PlayOneShotAttached(sounds.wind1, gameObject);
     }
 
     private void FixedUpdate()
@@ -96,7 +94,7 @@ public class Mover : MonoBehaviour
         if(timerRandom <= 0)
         {
             
-            RuntimeManager.PlayOneShotAttached(birdSing, gameObject);
+            RuntimeManager.PlayOneShotAttached(sounds.birdSing, gameObject);
             timerRandom = timerRandom = Random.Range(7.0f, 30.0f);
         }
     }
@@ -120,6 +118,7 @@ public class Mover : MonoBehaviour
     
     public IEnumerator ClickMove(Vector3 target)
     {
+        Debug.Log("ClickMove Works!");
 
         if (buttonClick.barkEnabled == true)
         {
@@ -183,7 +182,7 @@ public class Mover : MonoBehaviour
 
     public IEnumerator Bark()
     {
-        RuntimeManager.PlayOneShotAttached(dogBark, gameObject);
+        RuntimeManager.PlayOneShotAttached(sounds.dogBark, gameObject);
         Debug.Log("Bark");
         buttonClick.barkEnabled = false;
         yield break;
@@ -222,8 +221,23 @@ public class Mover : MonoBehaviour
             //Distance to other side in tunnel is about 47 units
             float distToOther = 50f;
             GameObject nearest = null;
-            
-            foreach (GameObject go in foundList)
+
+            foreach(GameObject gameObject in foundList)
+            {
+                if(gameObject.CompareTag("Dig"))
+                {
+                    nearest = gameObject;
+                }
+            }
+            if(nearest != null)
+            {
+                //TODO: ADD ANIMATION
+                //TODO: ADD SOUND
+                //TODO:CHANGE SCENE
+
+            }
+
+            /*foreach (GameObject go in foundList)
             {
                 if ((pos - go.transform.position).sqrMagnitude < dist && (go.transform.name == "Out" || go.transform.name == "In"))
                 {
@@ -253,9 +267,10 @@ public class Mover : MonoBehaviour
             
             (gameObject.GetComponent(typeof(Collider)) as Collider).isTrigger = false;
             //Debug.Log(Vector3.Distance(further.transform.position, transform.position) + " dist further and player");
+        } */
+            buttonClick.digEnabled = false;
+            yield break;
         }
-        buttonClick.digEnabled = false;
-        yield break;
     }
 
     public IEnumerator Pull()

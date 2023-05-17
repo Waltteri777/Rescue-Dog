@@ -1,0 +1,87 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4294628997603112206
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7922067932584770358}
+  - component: {fileID: 2773993531379864256}
+  - component: {fileID: 4668030660254281216}
+  m_Layer: 0
+  m_Name: Sounds
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7922067932584770358
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4294628997603112206}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.7260113, y: -3.5203323, z: -1.5030231}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 22
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2773993531379864256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4294628997603112206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9757a3e2baa1f0b49aa534f40c3fada7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dogBark:
+    Guid:
+      Data1: 476326969
+      Data2: 1313180433
+      Data3: -812013691
+      Data4: -2114753781
+    Path: event:/Bark
+  birdSing:
+    Guid:
+      Data1: 440562581
+      Data2: 1137113955
+      Data3: -522250329
+      Data4: -282908992
+    Path: event:/BirdSing
+  wind1:
+    Guid:
+      Data1: 1777258797
+      Data2: 1096421202
+      Data3: -1204698468
+      Data4: -2002149089
+    Path: event:/AmbientWind1RescueDog
+  diggingSound1:
+    Guid:
+      Data1: 888486118
+      Data2: 1298231371
+      Data3: 282387894
+      Data4: -166335459
+    Path: event:/DiggingDogRescueDog1
+--- !u!114 &4668030660254281216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4294628997603112206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 089049be58c18624aa5b827b881ad5fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
